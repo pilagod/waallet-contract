@@ -1,0 +1,18 @@
+version: "3.8"
+services:
+  testnet:
+    image: ghcr.io/foundry-rs/foundry
+    expose:
+      - "8545"
+    ports:
+      - "8545:8545"
+    command: ["anvil --host 0.0.0.0"]
+
+  deployment:
+    build:
+      context: ../../
+      dockerfile: ./docker/testnet/deployment/Dockerfile
+    depends_on:
+      - testnet
+    volumes:
+      - ../../:/waallet-contract
