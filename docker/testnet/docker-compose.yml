@@ -16,3 +16,20 @@ services:
       - testnet
     volumes:
       - ../../:/waallet-contract
+
+  rundler:
+    image: rundler
+    ports:
+      # RPC port
+      - "3000:3000"
+      # Metrics port
+      - "8080:8080"
+    depends_on:
+      - testnet
+      - deployment
+    environment:
+      - RUST_LOG=debug
+      - ENTRY_POINTS=0x5FbDB2315678afecb367f032d93F642f64180aa3
+      - NODE_HTTP=http://testnet:8545
+      - CHAIN_ID=31337
+      - BUILDER_PRIVATE_KEY=0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80
