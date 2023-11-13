@@ -10,5 +10,8 @@ out/
 # Docs
 docs/
 
+# Vendor
+vendor/
+
 # Dotenv file
 .env
