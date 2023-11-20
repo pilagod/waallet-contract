@@ -31,11 +31,11 @@ services:
       - ./keystore:/root/.ethereum/keystore
 
   geth_setup:
-    build:
-      context: ../../
-      dockerfile: ./docker/testnet/geth_setup/Dockerfile
+    image: ghcr.io/foundry-rs/foundry
+    working_dir: /waallet-contract
     depends_on:
       - geth
+    command: ./docker/testnet/geth_setup/entry.sh
     volumes:
       - ../../:/waallet-contract
 
@@ -58,3 +58,11 @@ services:
       - BUILDER_PRIVATE_KEY=0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80
       - RPC_API=eth,debug,rundler
       - RPC_TIMEOUT_SECONDS=600
+
+  rundler_setup:
+    image: alpine:3
+    depends_on:
+      - rundler
+    command: /rundler_setup/entry.sh
+    volumes:
+      - ./rundler_setup:/rundler_setup
