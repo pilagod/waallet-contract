@@ -30,10 +30,10 @@ services:
     volumes:
       - ./keystore:/root/.ethereum/keystore
 
-  deployment:
+  geth_setup:
     build:
       context: ../../
-      dockerfile: ./docker/testnet/deployment/Dockerfile
+      dockerfile: ./docker/testnet/geth_setup/Dockerfile
     depends_on:
       - geth
     volumes:
@@ -48,7 +48,7 @@ services:
       - "8080:8080"
     depends_on:
       - geth
-      - deployment
+      - geth_setup 
     environment:
       - RUST_LOG=debug
       - ENTRY_POINTS=0x5FbDB2315678afecb367f032d93F642f64180aa3
