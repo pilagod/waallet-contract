@@ -28,7 +28,7 @@ This testnet has following pre-deployed contracts:
 | SimpleAccount | 0x661b4a3909b486a3da520403ecc78f7a7b683c63 | Balance: 100 ether |
 | Counter | 0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9 | |
 
-The owner of these contracts is `0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266`, which is the first address derived from testing mnemonic `test test test test test test test test test test test junk`.
+The owner of these contracts is `0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266`, which is the first address derived from testing mnemonic `test test test test test test test test test test test junk`, and it has unlimited balance of ether.
 
 Clean resources for testnet:
 
