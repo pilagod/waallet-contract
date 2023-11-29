@@ -2,6 +2,8 @@
 
 ## Setup
 
+Clone `rundler` (a bundler implmentation by Alchemy) into `vendor` directory:
+
 ```bash
 git clone git@github.com:alchemyplatform/rundler.git vendor/rundler
 ```
@@ -9,8 +11,7 @@ git clone git@github.com:alchemyplatform/rundler.git vendor/rundler
 Build `rundler` docker image:
 
 ```bash
-cd vendor/rundler
-docker buildx build . -t rundler
+make build-rundler
 ```
 
 Run testnet:
