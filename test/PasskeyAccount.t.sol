@@ -21,7 +21,7 @@ contract PasskeyAccountTest is Test {
     // IEntryPoint public entryPoint =
     //     IEntryPoint(0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789);
 
-    string constant testCredId = "kGiLdR5QXc3ZoqfngaIWmjqsPc9rMZHiUjUHy8lL-rM";
+    string constant testCredId = "SsXJcMCtCFAY-v5SOnuyD7p3wZ-Vgmigd2S9qIu8fZE";
     uint256 constant testPubKeyX = 45350939242947319465541081481587742776218222217118268954655717869512694523738;
     uint256 constant testPubKeyY = 46971273219734637107918601418670912287394323851286117401543534995054486983562;
     uint256 constant testSalt = 0;
@@ -34,6 +34,7 @@ contract PasskeyAccountTest is Test {
     }
 
     function testWebauthnWithUserOp() public {
+        console2.logAddress(address(passkeyAccount));
         UserOperation memory userOp = this.createUserOp();
         bytes32 userOpHash = getUserOpHash(userOp); // 0xe6bdbae2879ecdae390c002716048d2f26f2a46b18eb819e21ad82e54a9b9919
         string memory userOpHashBaseUrl = Base64Url.encode(abi.encodePacked(userOpHash)); // 5r264oeeza45DAAnFgSNLybypGsY64GeIa2C5UqbmRk
