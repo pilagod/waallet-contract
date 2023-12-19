@@ -1,0 +1,49 @@
+{
+  "encrypted": false,
+  "folders": [],
+  "items": [
+    {
+      "passwordHistory": null,
+      "revisionDate": "2023-12-19T04:45:44.063Z",
+      "creationDate": "2023-12-19T04:45:43.570Z",
+      "deletedDate": null,
+      "id": "199b6282-b2f2-4f1c-9be3-b0dd004e7a2a",
+      "organizationId": null,
+      "folderId": null,
+      "type": 1,
+      "reprompt": 0,
+      "name": "webauthn.passwordless.id",
+      "notes": null,
+      "favorite": false,
+      "login": {
+        "fido2Credentials": [
+          {
+            "credentialId": "f61e45dc-380b-4a34-8c76-754e69d9a10b",
+            "keyType": "public-key",
+            "keyAlgorithm": "ECDSA",
+            "keyCurve": "P-256",
+            "keyValue": "MIGHAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBG0wawIBAQQgQEQlgQK7k8LzabzzixnpCs1P8CJDLvP8QDNqxgkbCxehRANCAASUyfuux3RtLc0NljgeoN7c1hyELgC0z-x4HaetPezvx-aI4SAUsDA3VLD1TaXEIiv4mEBgUPoYpccw9iOdYvoN",
+            "rpId": "webauthn.passwordless.id",
+            "userHandle": "0THnXcIrRq3leuKkcGUVEp9Va8W5SseMXy7AavlQ4LY",
+            "userName": "Waallet WebAuthn Test",
+            "counter": "0",
+            "rpName": "webauthn.passwordless.id",
+            "userDisplayName": "Waallet WebAuthn Test",
+            "discoverable": "true",
+            "creationDate": "2023-12-19T04:45:44.318Z"
+          }
+        ],
+        "uris": [
+          {
+            "match": null,
+            "uri": "https://webauthn.passwordless.id/demos/playground.html"
+          }
+        ],
+        "username": null,
+        "password": null,
+        "totp": null
+      },
+      "collectionIds": null
+    }
+  ]
+}
