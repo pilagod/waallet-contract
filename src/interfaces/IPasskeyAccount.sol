@@ -11,5 +11,9 @@ interface IPasskeyAccount {
     event PasskeyInitialized(string credId, uint256 pubKeyX, uint256 pubKeyY);
     event PasskeyUpdated(string credId, uint256 pubKeyX, uint256 pubKeyY);
 
-    function updatePasskey(string calldata credId, uint256 pubKeyX, uint256 pubKeyY) external;
+    function updatePasskey(
+        string calldata credId,
+        uint256 pubKeyX,
+        uint256 pubKeyY
+    ) external;
 }

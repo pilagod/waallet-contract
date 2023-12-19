@@ -5,10 +5,15 @@ out = "out"
 libs = ["lib"]
 optimizer_runs = 999999
 via_ir = true
-bracket_spacing = true
 remappings = [
     "@aa/=lib/account-abstraction/contracts/",
     "@openzeppelin/=lib/openzeppelin-contracts/"
 ]
+
+[fmt]
+line_length = 80
+tab_width = 4
+bracket_spacing = true
+multiline_func_header = "params_first"
 
 # See more config options https://github.com/foundry-rs/foundry/blob/master/crates/config/README.md#all-options
