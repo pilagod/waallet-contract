@@ -29,7 +29,7 @@ This testnet has following pre-deployed contracts:
 | SimpleAccount         | 0x1cee485cc83c5a17692904ff441a115fb223788e | Balance: 100 ether |
 | Counter               | 0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9 |                    |
 | PasskeyAccountFactory | 0x5FC8d32690cc91D4c39d9d3abcBD16989F875707 |                    |
-| PasskeyAccount        | 0x59c710cfa907a92de6d29971c7c20a5e080b3b43 | Balance: 100 ether |
+| PasskeyAccount        | 0x3c93bc637f7630b2d4ad51f4a02b786e81ff1498 | Balance: 100 ether |
 
 The owner of these contracts is `0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266`, which is the first address derived from testing mnemonic `test test test test test test test test test test test junk`, and it has unlimited balance of ether.
 

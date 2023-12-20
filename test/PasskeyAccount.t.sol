@@ -24,7 +24,7 @@ contract PasskeyAccountTest is Test {
     // IEntryPoint public entryPoint =
     //     IEntryPoint(0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789);
 
-    string constant testCredId = "4r_eU0L7TgSRAil-11ao4A";
+    string constant testCredId = "9h5F3DgLSjSMdnVOadmhCw";
     uint256 constant testPubKeyX =
         67299174900712686363169673082376821529726602378544032702281553676098545184711;
     uint256 constant testPubKeyY =
