@@ -8,9 +8,10 @@ import { P256Verifier } from "../utils/P256Verifier.sol";
 import { SimpleAccount } from "@aa/samples/SimpleAccount.sol";
 
 contract PasskeyAccount is SimpleAccount, IPasskeyAccount {
+    string public knownCredId;
     P256Verifier public immutable p256Verifier;
     Passkey private passkey;
-
+    
     // The constructor is used only for the "implementation" and only sets immutable values.
     // Mutable value slots for proxy accounts are set by the 'initialize' function.
     constructor(IEntryPoint anEntryPoint) SimpleAccount(anEntryPoint) {
@@ -45,7 +46,8 @@ contract PasskeyAccount is SimpleAccount, IPasskeyAccount {
             passkey.pubKeyX != 0 && passkey.pubKeyY != 0,
             "Passkey doesn't exist"
         );
-        passkey.credIdHash = keccak256(abi.encodePacked(credId));
+        knownCredId = credId;
+        passkey.credId = credId;
         passkey.pubKeyX = pubKeyX;
         passkey.pubKeyY = pubKeyY;
         emit PasskeyUpdated(credId, passkey.pubKeyX, passkey.pubKeyY);
@@ -67,7 +69,8 @@ contract PasskeyAccount is SimpleAccount, IPasskeyAccount {
             passkey.pubKeyX == 0 && passkey.pubKeyY == 0,
             "Passkey already exists"
         );
-        passkey.credIdHash = keccak256(abi.encodePacked(credId));
+        knownCredId = credId;
+        passkey.credId = credId;
         passkey.pubKeyX = pubKeyX;
         passkey.pubKeyY = pubKeyY;
         emit PasskeyInitialized(credId, passkey.pubKeyX, passkey.pubKeyY);

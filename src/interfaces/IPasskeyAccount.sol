@@ -2,7 +2,7 @@
 pragma solidity ^0.8.13;
 
 struct Passkey {
-    bytes32 credIdHash;
+    string credId;
     uint256 pubKeyX;
     uint256 pubKeyY;
 }
