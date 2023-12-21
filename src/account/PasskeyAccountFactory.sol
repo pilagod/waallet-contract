@@ -16,9 +16,11 @@ import { PasskeyAccount } from "./PasskeyAccount.sol";
  */
 contract PasskeyAccountFactory {
     PasskeyAccount public immutable accountImplementation;
+    IEntryPoint public entryPoint;
 
-    constructor(IEntryPoint entryPoint) {
-        accountImplementation = new PasskeyAccount(entryPoint);
+    constructor(IEntryPoint _entryPoint) {
+        entryPoint = _entryPoint;
+        accountImplementation = new PasskeyAccount(_entryPoint);
     }
 
     /**

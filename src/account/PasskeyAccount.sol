@@ -10,8 +10,8 @@ import { SimpleAccount } from "@aa/samples/SimpleAccount.sol";
 contract PasskeyAccount is SimpleAccount, IPasskeyAccount {
     string public knownCredId;
     P256Verifier public immutable p256Verifier;
-    Passkey private passkey;
-    
+    Passkey public passkey;
+
     // The constructor is used only for the "implementation" and only sets immutable values.
     // Mutable value slots for proxy accounts are set by the 'initialize' function.
     constructor(IEntryPoint anEntryPoint) SimpleAccount(anEntryPoint) {
@@ -42,10 +42,7 @@ contract PasskeyAccount is SimpleAccount, IPasskeyAccount {
     ) external virtual override {
         require(msg.sender == address(this), "Only wallet can update passkeys");
         require(pubKeyX != 0 && pubKeyY != 0, "Zero passkey is not allowed");
-        require(
-            passkey.pubKeyX != 0 && passkey.pubKeyY != 0,
-            "Passkey doesn't exist"
-        );
+        require(_isPasskeySet(passkey), "Passkey doesn't exist");
         knownCredId = credId;
         passkey.credId = credId;
         passkey.pubKeyX = pubKeyX;
@@ -76,6 +73,15 @@ contract PasskeyAccount is SimpleAccount, IPasskeyAccount {
         emit PasskeyInitialized(credId, passkey.pubKeyX, passkey.pubKeyY);
     }
 
+    // TODO: Assign Passkey with credId.
+    function _isPasskeySet(Passkey memory _passkey)
+        internal
+        pure
+        returns (bool)
+    {
+        return _passkey.pubKeyX != 0 && _passkey.pubKeyY != 0;
+    }
+
     /**
      * @param userOp typical userOperation
      * @param userOpHash the hash of the user operation.
@@ -85,10 +91,7 @@ contract PasskeyAccount is SimpleAccount, IPasskeyAccount {
         UserOperation calldata userOp,
         bytes32 userOpHash // As Webauthn's challenge
     ) internal view virtual override returns (uint256) {
-        require(
-            passkey.pubKeyX != 0 && passkey.pubKeyY != 0,
-            "Passkey doesn't exist"
-        );
+        require(_isPasskeySet(passkey), "Passkey doesn't exist");
         (
             bytes memory authenticatorData,
             bool requireUserVerification,
