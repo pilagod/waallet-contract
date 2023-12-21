@@ -8,7 +8,6 @@ import { P256Verifier } from "../utils/P256Verifier.sol";
 import { SimpleAccount } from "@aa/samples/SimpleAccount.sol";
 
 contract PasskeyAccount is SimpleAccount, IPasskeyAccount {
-    string public knownCredId;
     P256Verifier public immutable p256Verifier;
     Passkey public passkey;
 
@@ -43,7 +42,6 @@ contract PasskeyAccount is SimpleAccount, IPasskeyAccount {
         require(msg.sender == address(this), "Only wallet can update passkeys");
         require(pubKeyX != 0 && pubKeyY != 0, "Zero passkey is not allowed");
         require(_isPasskeySet(passkey), "Passkey doesn't exist");
-        knownCredId = credId;
         passkey.credId = credId;
         passkey.pubKeyX = pubKeyX;
         passkey.pubKeyY = pubKeyY;
@@ -66,7 +64,6 @@ contract PasskeyAccount is SimpleAccount, IPasskeyAccount {
             passkey.pubKeyX == 0 && passkey.pubKeyY == 0,
             "Passkey already exists"
         );
-        knownCredId = credId;
         passkey.credId = credId;
         passkey.pubKeyX = pubKeyX;
         passkey.pubKeyY = pubKeyY;
