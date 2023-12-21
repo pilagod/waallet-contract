@@ -3,16 +3,12 @@
 pragma solidity ^0.8.13;
 
 import { Test } from "forge-std/Test.sol";
-import { Vm } from "forge-std/Vm.sol";
 import { console2 } from "forge-std/console2.sol";
 
-import { EntryPoint } from "@aa/core/EntryPoint.sol";
 import { IEntryPoint } from "@aa/interfaces/IEntryPoint.sol";
 import {
     UserOperation, UserOperationLib
 } from "@aa/interfaces/UserOperation.sol";
-
-import { Create2 } from "@openzeppelin/contracts/utils/Create2.sol";
 
 import { PasskeyAccount, Base64Url } from "src/account/PasskeyAccount.sol";
 import { PasskeyAccountFactory } from "src/account/PasskeyAccountFactory.sol";
@@ -20,10 +16,7 @@ import { PasskeyAccountFactory } from "src/account/PasskeyAccountFactory.sol";
 contract PasskeyAccountTest is Test {
     using UserOperationLib for UserOperation;
 
-    address constant entryPointMainnetAddr =
-        0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789;
-    address constant entryPointGethAddr =
-        0x5FbDB2315678afecb367f032d93F642f64180aa3;
+    address constant entryPointAddr = 0x5FbDB2315678afecb367f032d93F642f64180aa3;
     string constant credId = "9h5F3DgLSjSMdnVOadmhCw";
     uint256 constant pubKeyX =
         67299174900712686363169673082376821529726602378544032702281553676098545184711;
@@ -39,13 +32,8 @@ contract PasskeyAccountTest is Test {
         // Align the entryPoint address with the one on the Gethnode and Mainnet
         bytes memory entryPointBytecode =
             vm.getCode("EntryPoint.sol:EntryPoint");
-        address entryPointAnotherAddr =
-            Create2.deploy(0, bytes32(uint256(2)), entryPointBytecode);
-        vm.etch(entryPointGethAddr, entryPointAnotherAddr.code);
-        vm.etch(entryPointMainnetAddr, entryPointAnotherAddr.code);
-
-        entryPoint = IEntryPoint(entryPointGethAddr);
-        // entryPoint = IEntryPoint(entryPointMainnetAddr);
+        vm.etch(entryPointAddr, entryPointBytecode);
+        entryPoint = IEntryPoint(entryPointAddr);
 
         // Deploy the PasskeyAccountFactory and PasskeyAccount
         passkeyAccountFactory = new PasskeyAccountFactory(entryPoint);
@@ -56,15 +44,9 @@ contract PasskeyAccountTest is Test {
     function testWebauthnWithUserOp() public {
         console2.logAddress(address(passkeyAccount));
         UserOperation memory userOp = this.createUserOp();
-        // userOpHash:
-        // Gethnode: 0xe6bdbae2879ecdae390c002716048d2f26f2a46b18eb819e21ad82e54a9b9919
-        // Mainnet: 0x08c60ab9d9f2622bb8ce884b67f553d45900518362aed8356f058acae92357ea
-        bytes32 userOpHash = getUserOpHash(userOp);
-        // userOpHashBaseUrl:
-        // Gethnode: 5r264oeeza45DAAnFgSNLybypGsY64GeIa2C5UqbmRk
-        // Mainnet: CMYKudnyYiu4zohLZ_VT1FkAUYNirtg1bwWKyukjV-o
+        bytes32 userOpHash = getUserOpHash(userOp); // 0xe6bdbae2879ecdae390c002716048d2f26f2a46b18eb819e21ad82e54a9b9919
         string memory userOpHashBaseUrl =
-            Base64Url.encode(abi.encodePacked(userOpHash));
+            Base64Url.encode(abi.encodePacked(userOpHash)); // 5r264oeeza45DAAnFgSNLybypGsY64GeIa2C5UqbmRk
         string memory clientDataJson = string.concat(
             '{"type":"webauthn.get","challenge":"',
             userOpHashBaseUrl,
@@ -76,18 +58,10 @@ contract PasskeyAccountTest is Test {
 
         bytes memory authenticatorData =
             hex"4fb20856f24a6ae7dafc2781090ac8477ae6e2bd072660236cc614c6fb7c2ea00500000001";
-        // Test on Gethnode
         uint256 sigR =
             79989742396362963594147811038759420161389526291519568381973513208052666825670;
-        // Test on Mainnet
-        // uint256 sigR =
-        //     16215626638256481224653703245698929562911260975214586003164815393541753303091;
-        // Test on Gethnode
         uint256 sigS =
             60564441634584281332486487842777985011692936482102942812772457824444148629022;
-        // Test on Mainnet
-        // uint256 sigS =
-        //     61693218141101862504114397997996460070590847077334214339447822237545340717822;
 
         userOp.signature = abi.encode(
             authenticatorData,
@@ -152,17 +126,18 @@ contract PasskeyAccountTest is Test {
     }
 
     function getUserOpHash(
-        UserOperation memory userOp,
-        address entryPointAddr
+        UserOperation memory _userOp,
+        address _entryPointAddr
     ) public view returns (bytes32) {
-        return this._getUserOpHash(userOp, entryPointAddr);
+        return this._getUserOpHash(_userOp, _entryPointAddr);
     }
 
     function _getUserOpHash(
-        UserOperation calldata userOp,
-        address entryPointAddr
+        UserOperation calldata _userOp,
+        address _entryPointAddr
     ) public view returns (bytes32) {
-        return
-            keccak256(abi.encode(userOp.hash(), entryPointAddr, block.chainid));
+        return keccak256(
+            abi.encode(_userOp.hash(), _entryPointAddr, block.chainid)
+        );
     }
 }

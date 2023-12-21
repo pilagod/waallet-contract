@@ -34,18 +34,18 @@ contract PasskeyAccount is SimpleAccount, IPasskeyAccount {
         _initPasskey(credId, pubKeyX, pubKeyY);
     }
 
-    function updatePasskey(
-        string calldata credId,
-        uint256 pubKeyX,
-        uint256 pubKeyY
-    ) external virtual override {
+    function updatePasskey(Passkey calldata _passkey)
+        external
+        virtual
+        override
+    {
         require(msg.sender == address(this), "Only wallet can update passkeys");
-        require(pubKeyX != 0 && pubKeyY != 0, "Zero passkey is not allowed");
-        require(_isPasskeySet(passkey), "Passkey doesn't exist");
-        passkey.credId = credId;
-        passkey.pubKeyX = pubKeyX;
-        passkey.pubKeyY = pubKeyY;
-        emit PasskeyUpdated(credId, passkey.pubKeyX, passkey.pubKeyY);
+        require(_isPasskeyValid(_passkey), "Zero passkey is not allowed");
+        require(_isPasskeyValid(passkey), "Passkey doesn't exist");
+        passkey.credId = _passkey.credId;
+        passkey.pubKeyX = _passkey.pubKeyX;
+        passkey.pubKeyY = _passkey.pubKeyY;
+        emit PasskeyUpdated(passkey.credId, passkey.pubKeyX, passkey.pubKeyY);
     }
 
     function validateSignature(
@@ -60,10 +60,7 @@ contract PasskeyAccount is SimpleAccount, IPasskeyAccount {
         uint256 pubKeyX,
         uint256 pubKeyY
     ) internal {
-        require(
-            passkey.pubKeyX == 0 && passkey.pubKeyY == 0,
-            "Passkey already exists"
-        );
+        require(!_isPasskeyValid(passkey), "Passkey already exists");
         passkey.credId = credId;
         passkey.pubKeyX = pubKeyX;
         passkey.pubKeyY = pubKeyY;
@@ -71,7 +68,7 @@ contract PasskeyAccount is SimpleAccount, IPasskeyAccount {
     }
 
     // TODO: Assign Passkey with credId.
-    function _isPasskeySet(Passkey memory _passkey)
+    function _isPasskeyValid(Passkey memory _passkey)
         internal
         pure
         returns (bool)
@@ -88,7 +85,7 @@ contract PasskeyAccount is SimpleAccount, IPasskeyAccount {
         UserOperation calldata userOp,
         bytes32 userOpHash // As Webauthn's challenge
     ) internal view virtual override returns (uint256) {
-        require(_isPasskeySet(passkey), "Passkey doesn't exist");
+        require(_isPasskeyValid(passkey), "Passkey doesn't exist");
         (
             bytes memory authenticatorData,
             bool requireUserVerification,
