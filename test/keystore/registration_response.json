@@ -1,0 +1,11 @@
+{
+  "username": "Waallet WebAuthn Test",
+  "credential": {
+    "id": "9h5F3DgLSjSMdnVOadmhCw",
+    "publicKey": "",
+    "algorithm": "ES256"
+  },
+  "authenticatorData": "T7IIVvJKaufa_CeBCQrIR3rm4r0HJmAjbMYUxvt8LqBFAAAAANVIgm55tNtAo9gREW9-g0kAEPYeRdw4C0o0jHZ1TmnZoQulAQIDJiABIVgglMn7rsd0bS3NDZY4HqDe3NYchC4AtM_seB2nrT3s78ciWCDmiOEgFLAwN1Sw9U2lxCIr-JhAYFD6GKXHMPYjnWL6DQ==",
+  "clientData": "eyJ0eXBlIjoid2ViYXV0aG4uY3JlYXRlIiwiY2hhbGxlbmdlIjoiM2E2Y2M0MzktZDc4MS00MmIxLThjYzQtOWRlNDE0NzQxZDIxIiwib3JpZ2luIjoiaHR0cHM6Ly93ZWJhdXRobi5wYXNzd29yZGxlc3MuaWQiLCJjcm9zc09yaWdpbiI6ZmFsc2V9",
+  "attestationData": "o2NmbXRkbm9uZWdhdHRTdG10oGhhdXRoRGF0YViUT7IIVvJKaufa_CeBCQrIR3rm4r0HJmAjbMYUxvt8LqBFAAAAANVIgm55tNtAo9gREW9-g0kAEPYeRdw4C0o0jHZ1TmnZoQulAQIDJiABIVgglMn7rsd0bS3NDZY4HqDe3NYchC4AtM_seB2nrT3s78ciWCDmiOEgFLAwN1Sw9U2lxCIr-JhAYFD6GKXHMPYjnWL6DQ=="
+}
