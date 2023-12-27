@@ -64,6 +64,7 @@ contract PasskeyAccountTest is Test {
             60564441634584281332486487842777985011692936482102942812772457824444148629022;
 
         userOp.signature = abi.encode(
+            false,
             authenticatorData,
             true,
             clientDataJson,
@@ -85,6 +86,7 @@ contract PasskeyAccountTest is Test {
         console2.logUint(sigS);
 
         userOp.signature = abi.encode(
+            false,
             authenticatorData,
             true,
             clientDataJson,

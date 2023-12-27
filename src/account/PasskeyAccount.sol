@@ -87,6 +87,7 @@ contract PasskeyAccount is SimpleAccount, IPasskeyAccount {
     ) internal view virtual override returns (uint256) {
         require(_isPasskeyValid(passkey), "Passkey doesn't exist");
         (
+            bool isSimulation,
             bytes memory authenticatorData,
             bool requireUserVerification,
             string memory clientDataJSON,
@@ -96,10 +97,11 @@ contract PasskeyAccount is SimpleAccount, IPasskeyAccount {
             uint256 s
         ) = abi.decode(
             userOp.signature,
-            (bytes, bool, string, uint256, uint256, uint256, uint256)
+            (bool, bytes, bool, string, uint256, uint256, uint256, uint256)
         );
-        return _verifySignatureWebauthn(
-            abi.encodePacked(userOpHash),
+        bytes memory challenge = isSimulation ? bytes("") : abi.encodePacked(userOpHash);
+        bool isSigValid = _verifySignatureWebauthn(
+            challenge,
             authenticatorData,
             requireUserVerification,
             clientDataJSON,
@@ -109,7 +111,11 @@ contract PasskeyAccount is SimpleAccount, IPasskeyAccount {
             s,
             passkey.pubKeyX,
             passkey.pubKeyY
-        ) ? 0 : SIG_VALIDATION_FAILED;
+        );
+        if (isSimulation) {
+            return SIG_VALIDATION_FAILED;
+        }
+        return isSigValid ? 0 : SIG_VALIDATION_FAILED;
     }
 
     function _verifySignatureAllowMalleability(
