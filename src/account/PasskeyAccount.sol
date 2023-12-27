@@ -99,7 +99,8 @@ contract PasskeyAccount is SimpleAccount, IPasskeyAccount {
             userOp.signature,
             (bool, bytes, bool, string, uint256, uint256, uint256, uint256)
         );
-        bytes memory challenge = isSimulation ? bytes("") : abi.encodePacked(userOpHash);
+        bytes memory challenge =
+            isSimulation ? bytes("") : abi.encodePacked(userOpHash);
         bool isSigValid = _verifySignatureWebauthn(
             challenge,
             authenticatorData,
