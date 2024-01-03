@@ -19,5 +19,5 @@ services:
 
 networks:
   testnet:
-    external:
-      name: testnet
+    name: testnet
+    external: true
