@@ -1,0 +1,50 @@
+version: "3.8"
+services:
+  geth:
+    image: ethereum/client-go:v1.10.26
+    expose:
+      - "8545"
+    ports:
+      - "8545:8545"
+    command:
+      - --datadir=/root/.ethereum
+      - --keystore=/root/.ethereum/keystore
+      - --unlock=0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266
+      - --password=/root/.ethereum/keystore/password
+      - --miner.gaslimit=12000000
+      - --miner.etherbase=0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266
+      - --http
+      - --http.api=personal,eth,net,web3,debug,clique
+      - --http.vhosts=*
+      - --http.addr=0.0.0.0
+      - --ignore-legacy-receipts
+      - --allow-insecure-unlock
+      - --rpc.allow-unprotected-txs
+      - --dev
+      - --verbosity=2
+      - --nodiscover
+      - --maxpeers=0
+      - --mine
+      - --miner.threads=1
+      - --networkid=1337
+    volumes:
+      - ./keystore:/root/.ethereum/keystore
+
+  rundler:
+    image: rundler
+    ports:
+      # RPC port
+      - "3000:3000"
+      # Metrics port
+      - "8080:8080"
+    depends_on:
+      - geth
+    environment:
+      - RUST_LOG=debug
+      - ENTRY_POINTS=0x5FbDB2315678afecb367f032d93F642f64180aa3
+      - NODE_HTTP=http://geth:8545
+      - CHAIN_ID=1337
+      - BUILDER_MAX_BUNDLE_SIZE=1
+      - BUILDER_PRIVATE_KEY=0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80
+      - RPC_API=eth,debug,rundler
+      - RPC_TIMEOUT_SECONDS=600
