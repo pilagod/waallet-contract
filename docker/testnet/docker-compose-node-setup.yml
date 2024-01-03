@@ -7,7 +7,7 @@ services:
     volumes:
       - ../../:/waallet-contract
     networks:
-      - testnet-node
+      - testnet
 
   rundler_setup:
     image: alpine:3
@@ -15,9 +15,9 @@ services:
     volumes:
       - ./rundler_setup:/rundler_setup
     networks:
-      - testnet-node
+      - testnet
 
 networks:
-  testnet-node:
+  testnet:
     name: testnet
     external: true
