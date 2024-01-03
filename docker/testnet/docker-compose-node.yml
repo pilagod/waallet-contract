@@ -29,6 +29,8 @@ services:
       - --networkid=1337
     volumes:
       - ./keystore:/root/.ethereum/keystore
+    networks:
+      - testnet
 
   rundler:
     image: rundler
@@ -48,3 +50,9 @@ services:
       - BUILDER_PRIVATE_KEY=0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80
       - RPC_API=eth,debug,rundler
       - RPC_TIMEOUT_SECONDS=600
+    networks:
+      - testnet
+
+networks:
+  testnet:
+    name: testnet
