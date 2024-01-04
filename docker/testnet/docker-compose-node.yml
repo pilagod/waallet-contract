@@ -33,7 +33,7 @@ services:
       - testnet
 
   rundler:
-    image: pilagod/rundler:latest-arm64
+    image: pilagod/rundler
     ports:
       # RPC port
       - "3000:3000"
