@@ -40,7 +40,7 @@ services:
       - ../../:/waallet-contract
 
   rundler:
-    image: rundler
+    image: pilagod/rundler
     ports:
       # RPC port
       - "3000:3000"

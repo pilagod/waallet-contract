@@ -2,18 +2,6 @@
 
 ## Setup
 
-Clone `rundler` (a bundler implmentation by Alchemy) into `vendor` directory:
-
-```bash
-git clone git@github.com:alchemyplatform/rundler.git vendor/rundler
-```
-
-Build `rundler` docker image:
-
-```bash
-make build-rundler
-```
-
 Run testnet:
 
 ```bash
