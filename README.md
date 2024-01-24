@@ -56,7 +56,7 @@ Transaction hash: 0xcf3c71f9b71fff6f7f45dbc3a512db667e10ab6eb272a700dfe1ab32aef0
 - Replace `<YOUR_PASSKEY_ACCOUNT_FACTORY_ADDRESS>` with your deployed PasskeyAccountFactory address.
 
 ```shell
-forge verify-contract --watch --chain "sepolia" --verifier "etherscan" --etherscan-api-key ${ETHERSCAN_API_KEY} --compiler-version "v0.8.23+commit.f704f362" --constructor-args $(cast abi-encode "constructor(address)" ${ENTRYPOINT_ADDRESS}) "<YOUR_PASSKEY_ACCOUNT_FACTORY_ADDRESS>" "src/account/PasskeyAccountFactory.sol:PasskeyAccountFactory"
+forge verify-contract --watch --chain "sepolia" --verifier "etherscan" --etherscan-api-key ${ETHERSCAN_API_KEY} --compiler-version "0.8.23" --constructor-args $(cast abi-encode "constructor(address)" ${ENTRYPOINT_ADDRESS}) "<YOUR_PASSKEY_ACCOUNT_FACTORY_ADDRESS>" "src/account/PasskeyAccountFactory.sol:PasskeyAccountFactory"
 ```
 
 - Output sample
