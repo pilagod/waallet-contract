@@ -58,3 +58,8 @@ cast send --rpc-url ${rpc_url} --private-key ${operator_private_key} ${passkey_a
 # Deploy VerifyingPaymaster
 echo -e "\033[0;33m[Deploy VerifyingPaymaster]\033[0m"
 forge create --rpc-url ${rpc_url} --private-key ${operator_private_key} lib/account-abstraction/contracts/samples/VerifyingPaymaster.sol:VerifyingPaymaster --constructor-args ${entry_point_address} ${operator_address}
+verifying_paymaster_address="0x2279B7A0a67DB372996a5FaB50D91eAA73d2eBe6"
+
+# Deposit to EntryPoint for PasskeyAccount
+echo -e "\033[0;33m[Deposit 100 ETH to EntryPoint for VerifyingPaymaster]\033[0m"
+cast send --rpc-url ${rpc_url} --private-key ${operator_private_key} ${entry_point_address} --value 100ether "depositTo(address account)" ${verifying_paymaster_address}
