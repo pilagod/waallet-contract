@@ -36,6 +36,10 @@ services:
     depends_on:
       - geth
     command: ./docker/testnet/geth_setup/entry.sh
+    environment:
+      - PASSKEY_CREDENTIAL_ID=${PASSKEY_CREDENTIAL_ID}
+      - PASSKEY_X=${PASSKEY_X}
+      - PASSKEY_Y=${PASSKEY_Y}
     volumes:
       - ../../:/waallet-contract
 
