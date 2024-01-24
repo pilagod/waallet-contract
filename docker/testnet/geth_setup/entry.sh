@@ -54,3 +54,7 @@ echo ${passkey_account_address}
 # Topup PasskeyAccount
 echo -e "\033[0;33m[Transfer 100 ETH to PasskeyAccount]\033[0m"
 cast send --rpc-url ${rpc_url} --private-key ${operator_private_key} ${passkey_account_address} --value 100ether
+
+# Deploy VerifyingPaymaster
+echo -e "\033[0;33m[Deploy VerifyingPaymaster]\033[0m"
+forge create --rpc-url ${rpc_url} --private-key ${operator_private_key} lib/account-abstraction/contracts/samples/VerifyingPaymaster.sol:VerifyingPaymaster --constructor-args ${entry_point_address} ${operator_address}

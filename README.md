@@ -18,6 +18,7 @@ This testnet has following pre-deployed contracts:
 | Counter               | 0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9 |                    |
 | PasskeyAccountFactory | 0x5FC8d32690cc91D4c39d9d3abcBD16989F875707 |                    |
 | PasskeyAccount        | 0x3c93bc637f7630b2d4ad51f4a02b786e81ff1498 | Balance: 100 ether |
+| VerifyingPaymaster    | 0x2279B7A0a67DB372996a5FaB50D91eAA73d2eBe6 |                    |
 
 The owner of these contracts is `0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266`, which is the first address derived from testing mnemonic `test test test test test test test test test test test junk`, and it has unlimited balance of ether.
 
