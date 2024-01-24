@@ -4,19 +4,19 @@ pragma solidity ^0.8.13;
 import { Base64Url } from "../utils/Base64Url.sol";
 import { IEntryPoint, UserOperation } from "@aa/interfaces/IEntryPoint.sol";
 import { IPasskeyAccount, Passkey } from "../interfaces/IPasskeyAccount.sol";
-import { P256Verifier } from "../utils/P256Verifier.sol";
 import { SimpleAccount } from "@aa/samples/SimpleAccount.sol";
 
 contract PasskeyAccount is SimpleAccount, IPasskeyAccount {
-    P256Verifier public immutable p256Verifier;
+    address public immutable p256Verifier;
     Passkey public passkey;
 
     // The constructor is used only for the "implementation" and only sets immutable values.
     // Mutable value slots for proxy accounts are set by the 'initialize' function.
-    constructor(IEntryPoint anEntryPoint) SimpleAccount(anEntryPoint) {
-        // Get a P256Verifier instance from the mainnet or Sepolia testnet.
-        // p256Verifier = P256Verifier(0xc2b78104907F722DABAc4C69f826a522B2754De4);
-        p256Verifier = new P256Verifier();
+    constructor(
+        IEntryPoint _entryPoint,
+        address _p256Verifier
+    ) SimpleAccount(_entryPoint) {
+        p256Verifier = _p256Verifier;
     }
 
     /**

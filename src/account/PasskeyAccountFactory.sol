@@ -6,6 +6,7 @@ import { ERC1967Proxy } from
     "@openzeppelin/contracts/proxy/ERC1967/ERC1967Proxy.sol";
 import { IEntryPoint } from "@aa/interfaces/IEntryPoint.sol";
 import { PasskeyAccount } from "./PasskeyAccount.sol";
+import { P256_VERIFIER_CREATION_CODE } from "../utils/P256Constants.sol";
 
 /* solhint-disable no-inline-assembly */
 
@@ -20,7 +21,9 @@ contract PasskeyAccountFactory {
 
     constructor(IEntryPoint _entryPoint) {
         entryPoint = _entryPoint;
-        accountImplementation = new PasskeyAccount(_entryPoint);
+        address p256Verifier =
+            Create2.deploy(0, bytes32(0), P256_VERIFIER_CREATION_CODE);
+        accountImplementation = new PasskeyAccount(_entryPoint, p256Verifier);
     }
 
     /**
