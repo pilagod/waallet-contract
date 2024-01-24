@@ -6,4 +6,4 @@ testnet-up:
 
 .PHONY: testnet-down
 testnet-down:
-	docker compose -f ./docker/testnet/docker-compose.yml down -v --remove-orphans
+	docker compose -f ./docker/testnet/docker-compose.yml --env-file .env.testnet down -v --remove-orphans
