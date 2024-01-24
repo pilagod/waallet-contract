@@ -26,3 +26,55 @@ Clean resources for testnet:
 ```bash
 make testnet-down
 ```
+
+## Appendix: Deploy and verify PasskeyAccountFactory on Sepolia testnet
+
+### Deploy PasskeyAccountFactory contract
+
+- Edit [.env](.env.example) and run the following command.
+
+```shell
+source .env
+
+forge create --rpc-url ${NODE_RPC_URL} --private-key ${DEPLOYER_PRIVATE_KEY} --use "0.8.23" "src/account/PasskeyAccountFactory.sol:PasskeyAccountFactory" --constructor-args ${ENTRYPOINT_ADDRESS}
+```
+
+- Output sample
+
+```shell
+[⠒] Compiling...
+[⠢] Compiling 4 files with 0.8.23
+[⠆] Solc 0.8.23 finished in 2.04s
+Compiler run successful!
+Deployer: 0x982A41a1F3bC1F8bdB71F11751F3a71691794AfA
+Deployed to: 0x4F0e62B7294D26b223a2cffc02BE5D072528c0De
+Transaction hash: 0xcf3c71f9b71fff6f7f45dbc3a512db667e10ab6eb272a700dfe1ab32aef0958c
+```
+
+### Verify PasskeyAccountFactory contract
+
+- Replace `<YOUR_PASSKEY_ACCOUNT_FACTORY_ADDRESS>` with your deployed PasskeyAccountFactory address.
+
+```shell
+forge verify-contract --watch --chain "sepolia" --verifier "etherscan" --etherscan-api-key ${ETHERSCAN_API_KEY} --compiler-version "0.8.23" --constructor-args $(cast abi-encode "constructor(address)" ${ENTRYPOINT_ADDRESS}) "<YOUR_PASSKEY_ACCOUNT_FACTORY_ADDRESS>" "src/account/PasskeyAccountFactory.sol:PasskeyAccountFactory"
+```
+
+- Output sample
+
+```shell
+Start verifying contract `0x4F0e62B7294D26b223a2cffc02BE5D072528c0De` deployed on sepolia
+
+Submitting verification for [src/account/PasskeyAccountFactory.sol:PasskeyAccountFactory] 0x4F0e62B7294D26b223a2cffc02BE5D072528c0De.
+Submitted contract for verification:
+        Response: `OK`
+        GUID: `u27yc7avgdwdce827ptgvhwtbat1daqzrwh362xp2zganicbrw`
+        URL:
+        https://sepolia.etherscan.io/address/0x4f0e62b7294d26b223a2cffc02be5d072528c0de
+Contract verification status:
+Response: `NOTOK`
+Details: `Pending in queue`
+Contract verification status:
+Response: `OK`
+Details: `Pass - Verified`
+Contract successfully verified
+```
