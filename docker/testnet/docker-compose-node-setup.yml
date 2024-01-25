@@ -4,6 +4,10 @@ services:
     image: ghcr.io/foundry-rs/foundry
     working_dir: /waallet-contract
     command: ./docker/testnet/geth_setup/entry.sh
+    environment:
+      - PASSKEY_CREDENTIAL_ID=${PASSKEY_CREDENTIAL_ID}
+      - PASSKEY_X=${PASSKEY_X}
+      - PASSKEY_Y=${PASSKEY_Y}
     volumes:
       - ../../:/waallet-contract
     networks:
