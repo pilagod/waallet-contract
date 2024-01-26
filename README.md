@@ -48,7 +48,7 @@ make testnet-down
 
 ## Appendix: Deploy and verify PasskeyAccount on Sepolia testnet
 
-### Deploy and verify PasskeyAccountFactory contract
+### Deploy PasskeyAccountFactory contract
 
 - Edit the `.env.deployment` file by copying from `.env.deployment.example` and then run the following command.
 
@@ -95,12 +95,6 @@ Details: `Pass - Verified`
 Contract successfully verified
 ```
 
-### Deploy PasskeyAccount contract via PasskeyAccountFactory
-
-```shell
-cast send --rpc-url ${NODE_RPC_URL} --private-key ${DEPLOYER_PRIVATE_KEY} ${PASSKEY_ACCOUNT_FACTORY_ADDRESS} "createAccount(string calldata credId,uint256 pubKeyX,uint256 pubKeyY,uint256 salt)" ${PASSKEY_CREDENTIAL_ID} ${PASSKEY_X} ${PASSKEY_Y} 0
-```
-
 ### Verify PasskeyAccount implementation contract
 
 ```shell
@@ -109,6 +103,12 @@ PASSKEY_ACCOUNT_IMPLEMENTATION_ADDRESS=$(cast call --rpc-url ${NODE_RPC_URL} ${P
 P256_VERIFIER_ADDRESS=$(cast call --rpc-url ${NODE_RPC_URL} ${PASSKEY_ACCOUNT_FACTORY_ADDRESS} "p256Verifier()" | sed -r 's/^[.]*(0x)([0]{24})?([0-9a-zA-Z]{40})[.]*$/\1\3/g')
 
 forge verify-contract --watch --chain "sepolia" --verifier "etherscan" --etherscan-api-key ${ETHERSCAN_API_KEY} --compiler-version "0.8.23" --constructor-args $(cast abi-encode "constructor(address,address)" ${ENTRYPOINT_ADDRESS} ${P256_VERIFIER_ADDRESS}) ${PASSKEY_ACCOUNT_IMPLEMENTATION_ADDRESS} "src/account/PasskeyAccount.sol:PasskeyAccount"
+```
+
+### Deploy PasskeyAccount contract via PasskeyAccountFactory
+
+```shell
+cast send --rpc-url ${NODE_RPC_URL} --private-key ${DEPLOYER_PRIVATE_KEY} ${PASSKEY_ACCOUNT_FACTORY_ADDRESS} "createAccount(string calldata credId,uint256 pubKeyX,uint256 pubKeyY,uint256 salt)" ${PASSKEY_CREDENTIAL_ID} ${PASSKEY_X} ${PASSKEY_Y} 0
 ```
 
 ### Verify PasskeyAccount contract
