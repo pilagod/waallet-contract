@@ -50,10 +50,10 @@ make testnet-down
 
 ### Deploy PasskeyAccountFactory contract
 
-- Edit [.env](.env.example) and run the following command.
+- Edit the `.env.deployment` file by copying from `.env.deployment.example` and then run the following command.
 
 ```shell
-source .env
+source .env.deployment
 
 forge create --rpc-url ${NODE_RPC_URL} --private-key ${DEPLOYER_PRIVATE_KEY} --use "0.8.23" "src/account/PasskeyAccountFactory.sol:PasskeyAccountFactory" --constructor-args ${ENTRYPOINT_ADDRESS}
 ```
