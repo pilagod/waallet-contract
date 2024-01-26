@@ -33,7 +33,7 @@ This testnet has following pre-deployed contracts:
 | SimpleAccount         | 0x661b4a3909b486a3da520403ecc78f7a7b683c63 | Balance: 100 ether            |
 | Counter               | 0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9 |                               |
 | PasskeyAccountFactory | 0x5FC8d32690cc91D4c39d9d3abcBD16989F875707 |                               |
-| PasskeyAccount        | ***Depending on PASSKEY env variables***   | Balance: 100 ether            |
+| PasskeyAccount        | **_Depending on PASSKEY env variables_**   | Balance: 100 ether            |
 | VerifyingPaymaster    | 0x2279B7A0a67DB372996a5FaB50D91eAA73d2eBe6 | EntryPoint deposit: 100 ether |
 
 > If you use default passkey, the PasskeyAccount address would be `0xf30a89a6a3836e2b270650822e3f3cebff3b7497`.
@@ -46,14 +46,14 @@ Clean resources for testnet:
 make testnet-down
 ```
 
-## Appendix: Deploy and verify PasskeyAccountFactory on Sepolia testnet
+## Appendix: Deploy and verify PasskeyAccount on Sepolia testnet
 
 ### Deploy PasskeyAccountFactory contract
 
-- Edit [.env](.env.example) and run the following command.
+- Edit the `.env.deployment` file by copying from `.env.deployment.example` and then run the following command.
 
 ```shell
-source .env
+source .env.deployment
 
 forge create --rpc-url ${NODE_RPC_URL} --private-key ${DEPLOYER_PRIVATE_KEY} --use "0.8.23" "src/account/PasskeyAccountFactory.sol:PasskeyAccountFactory" --constructor-args ${ENTRYPOINT_ADDRESS}
 ```
@@ -62,38 +62,76 @@ forge create --rpc-url ${NODE_RPC_URL} --private-key ${DEPLOYER_PRIVATE_KEY} --u
 
 ```shell
 [⠒] Compiling...
-[⠢] Compiling 4 files with 0.8.23
-[⠆] Solc 0.8.23 finished in 2.04s
+No files changed, compilation skipped
 Compiler run successful!
 Deployer: 0x982A41a1F3bC1F8bdB71F11751F3a71691794AfA
-Deployed to: 0x4F0e62B7294D26b223a2cffc02BE5D072528c0De
-Transaction hash: 0xcf3c71f9b71fff6f7f45dbc3a512db667e10ab6eb272a700dfe1ab32aef0958c
+Deployed to: 0x4d21849008fa59F36971A2611746F080b9B79220
+Transaction hash: 0x7a6d29b281aaef31e5d7ae5080b8800614f4f053b63fbb83a0d870807197b252
 ```
 
 ### Verify PasskeyAccountFactory contract
 
-- Replace `<YOUR_PASSKEY_ACCOUNT_FACTORY_ADDRESS>` with your deployed PasskeyAccountFactory address.
+- Replace `<YOUR_PASSKEY_ACCOUNT_FACTORY_ADDRESS>` with your deployed PasskeyAccountFactory address (e.g., 0x4d21849008fa59F36971A2611746F080b9B79220).
 
 ```shell
-forge verify-contract --watch --chain "sepolia" --verifier "etherscan" --etherscan-api-key ${ETHERSCAN_API_KEY} --compiler-version "0.8.23" --constructor-args $(cast abi-encode "constructor(address)" ${ENTRYPOINT_ADDRESS}) "<YOUR_PASSKEY_ACCOUNT_FACTORY_ADDRESS>" "src/account/PasskeyAccountFactory.sol:PasskeyAccountFactory"
+PASSKEY_ACCOUNT_FACTORY_ADDRESS="<YOUR_PASSKEY_ACCOUNT_FACTORY_ADDRESS>"
+
+forge verify-contract --watch --chain "sepolia" --verifier "etherscan" --etherscan-api-key ${ETHERSCAN_API_KEY} --compiler-version "0.8.23" --constructor-args $(cast abi-encode "constructor(address)" ${ENTRYPOINT_ADDRESS}) ${PASSKEY_ACCOUNT_FACTORY_ADDRESS} "src/account/PasskeyAccountFactory.sol:PasskeyAccountFactory"
 ```
 
 - Output sample
 
 ```shell
-Start verifying contract `0x4F0e62B7294D26b223a2cffc02BE5D072528c0De` deployed on sepolia
+Start verifying contract `0x4d21849008fa59F36971A2611746F080b9B79220` deployed on sepolia
 
-Submitting verification for [src/account/PasskeyAccountFactory.sol:PasskeyAccountFactory] 0x4F0e62B7294D26b223a2cffc02BE5D072528c0De.
+Submitting verification for [src/account/PasskeyAccountFactory.sol:PasskeyAccountFactory] 0x4d21849008fa59F36971A2611746F080b9B79220.
 Submitted contract for verification:
         Response: `OK`
-        GUID: `u27yc7avgdwdce827ptgvhwtbat1daqzrwh362xp2zganicbrw`
-        URL:
-        https://sepolia.etherscan.io/address/0x4f0e62b7294d26b223a2cffc02be5d072528c0de
-Contract verification status:
-Response: `NOTOK`
-Details: `Pending in queue`
+        GUID: `tqw8mnuhqwuigkkp9vwzgu89qespbkma6umeszbmjlvcjmvj1i`
+        URL: https://sepolia.etherscan.io/address/0x4d21849008fa59f36971a2611746f080b9b79220
 Contract verification status:
 Response: `OK`
 Details: `Pass - Verified`
 Contract successfully verified
+```
+
+### Verify PasskeyAccount implementation contract
+
+```shell
+PASSKEY_ACCOUNT_IMPLEMENTATION_ADDRESS=$(cast call --rpc-url ${NODE_RPC_URL} ${PASSKEY_ACCOUNT_FACTORY_ADDRESS} "accountImplementation()" | sed -r 's/^[.]*(0x)([0]{24})?([0-9a-zA-Z]{40})[.]*$/\1\3/g')
+
+P256_VERIFIER_ADDRESS=$(cast call --rpc-url ${NODE_RPC_URL} ${PASSKEY_ACCOUNT_FACTORY_ADDRESS} "p256Verifier()" | sed -r 's/^[.]*(0x)([0]{24})?([0-9a-zA-Z]{40})[.]*$/\1\3/g')
+
+forge verify-contract --watch --chain "sepolia" --verifier "etherscan" --etherscan-api-key ${ETHERSCAN_API_KEY} --compiler-version "0.8.23" --constructor-args $(cast abi-encode "constructor(address,address)" ${ENTRYPOINT_ADDRESS} ${P256_VERIFIER_ADDRESS}) ${PASSKEY_ACCOUNT_IMPLEMENTATION_ADDRESS} "src/account/PasskeyAccount.sol:PasskeyAccount"
+```
+
+### Deploy PasskeyAccount contract via PasskeyAccountFactory
+
+```shell
+cast send --rpc-url ${NODE_RPC_URL} --private-key ${DEPLOYER_PRIVATE_KEY} ${PASSKEY_ACCOUNT_FACTORY_ADDRESS} "createAccount(string calldata credId,uint256 pubKeyX,uint256 pubKeyY,uint256 salt)" ${PASSKEY_CREDENTIAL_ID} ${PASSKEY_X} ${PASSKEY_Y} 0
+```
+
+### Verify PasskeyAccount contract
+
+- 1. Run the command below.
+
+```shell
+PASSKEY_ACCOUNT_ADDRESS=$(cast call --rpc-url ${NODE_RPC_URL} ${PASSKEY_ACCOUNT_FACTORY_ADDRESS} "getAddress(string calldata credId,uint256 pubKeyX,uint256 pubKeyY,uint256 salt)" ${PASSKEY_CREDENTIAL_ID} ${PASSKEY_X} ${PASSKEY_Y} 0 | sed -r 's/^[.]*(0x)([0]{24})?([0-9a-zA-Z]{40})[.]*$/\1\3/g')
+
+echo "Verification link: https://sepolia.etherscan.io/address/${PASSKEY_ACCOUNT_ADDRESS}#code" && echo "Implementation contract: ${PASSKEY_ACCOUNT_IMPLEMENTATION_ADDRESS}"
+```
+
+- 2. Open the displayed verification link; here is a sample output.
+
+```shell
+Verification link: https://sepolia.etherscan.io/address/0x5c5d3afdaafdfb4ad974a28eda9bbf4c91c043a6#code
+Implementation contract: 0xb22adc80082e3ad52b64138f5677c9f5f46dad1c
+```
+
+- 3. Click `Is this a proxy?` and `Verify`. Ensure the displayed implementation contract matches the sample output. Click `Save` to complete PasskeyAccount verification.
+
+- 4. If necessary, you can also verify PasskeyAccount (ERC1967Proxy) contract.
+
+```shell
+forge verify-contract --watch --chain "sepolia" --verifier "etherscan" --etherscan-api-key ${ETHERSCAN_API_KEY} --compiler-version "0.8.23" --constructor-args $(cast abi-encode "constructor(address,bytes)" ${PASSKEY_ACCOUNT_IMPLEMENTATION_ADDRESS} $(cast calldata "initialize(string,uint256,uint256)" ${PASSKEY_CREDENTIAL_ID} ${PASSKEY_X} ${PASSKEY_Y})) ${PASSKEY_ACCOUNT_ADDRESS} "lib/openzeppelin-contracts/contracts/proxy/ERC1967/ERC1967Proxy.sol:ERC1967Proxy"
 ```

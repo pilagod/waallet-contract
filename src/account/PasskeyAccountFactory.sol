@@ -16,12 +16,13 @@ import { P256_VERIFIER_CREATION_CODE } from "../utils/P256Constants.sol";
  * constructor and initializer of the actual account contract.
  */
 contract PasskeyAccountFactory {
+    address public immutable p256Verifier;
     PasskeyAccount public immutable accountImplementation;
     IEntryPoint public entryPoint;
 
     constructor(IEntryPoint _entryPoint) {
         entryPoint = _entryPoint;
-        address p256Verifier =
+        p256Verifier =
             Create2.deploy(0, bytes32(0), P256_VERIFIER_CREATION_CODE);
         accountImplementation = new PasskeyAccount(_entryPoint, p256Verifier);
     }
