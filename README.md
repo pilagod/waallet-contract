@@ -53,7 +53,6 @@ make testnet-down
 - Edit the `.env.deployment` file by copying from `.env.deployment.example` and then run the following command.
 
 ```shell
-foundyup # Update Foundry and solidity compiler
 source .env.deployment
 
 forge create --rpc-url ${NODE_RPC_URL} --private-key ${DEPLOYER_PRIVATE_KEY} --use ${COMPILER_VERSION} "src/account/PasskeyAccountFactory.sol:PasskeyAccountFactory" --constructor-args ${ENTRYPOINT_ADDRESS}
