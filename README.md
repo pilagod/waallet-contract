@@ -46,7 +46,7 @@ Clean resources for testnet:
 make testnet-down
 ```
 
-## Appendix: Deploy and verify PasskeyAccount
+## Appendix 1: Deploy and verify PasskeyAccount
 
 ### Deploy PasskeyAccountFactory contract
 
@@ -134,4 +134,60 @@ Implementation contract: 0xb22adc80082e3ad52b64138f5677c9f5f46dad1c
 
 ```shell
 forge verify-contract --watch --chain ${NETWORK_NAME} --verifier "etherscan" --etherscan-api-key ${ETHERSCAN_API_KEY} --compiler-version ${COMPILER_VERSION} --constructor-args $(cast abi-encode "constructor(address,bytes)" ${PASSKEY_ACCOUNT_IMPLEMENTATION_ADDRESS} $(cast calldata "initialize(string,uint256,uint256)" ${PASSKEY_CREDENTIAL_ID} ${PASSKEY_X} ${PASSKEY_Y})) ${PASSKEY_ACCOUNT_ADDRESS} "lib/openzeppelin-contracts/contracts/proxy/ERC1967/ERC1967Proxy.sol:ERC1967Proxy"
+```
+
+## Appendix 2: Deploy and verify SimpleAccount
+
+### Deploy SimpleAccountFactory contract
+
+- Edit the `.env.deployment` file by copying from `.env.deployment.example` and then run the following command.
+
+```shell
+source .env.deployment
+
+forge create --rpc-url ${NODE_RPC_URL} --private-key ${DEPLOYER_PRIVATE_KEY} --use ${COMPILER_VERSION} "lib/account-abstraction/contracts/samples/SimpleAccountFactory.sol:SimpleAccountFactory" --constructor-args ${ENTRYPOINT_ADDRESS}
+```
+
+### Verify SimpleAccountFactory contract
+
+- Replace `<YOUR_SIMPLE_ACCOUNT_FACTORY_ADDRESS>` with your deployed SimpleAccountFactory address.
+
+```shell
+SIMPLE_ACCOUNT_FACTORY_ADDRESS="<YOUR_SIMPLE_ACCOUNT_FACTORY_ADDRESS>"
+
+forge verify-contract --watch --chain ${NETWORK_NAME} --verifier "etherscan" --etherscan-api-key ${ETHERSCAN_API_KEY} --compiler-version ${COMPILER_VERSION} --constructor-args $(cast abi-encode "constructor(address)" ${ENTRYPOINT_ADDRESS}) ${SIMPLE_ACCOUNT_FACTORY_ADDRESS} "lib/account-abstraction/contracts/samples/SimpleAccountFactory.sol:SimpleAccountFactory"
+```
+
+### Verify SimpleAccount implementation contract
+
+```shell
+SIMPLE_ACCOUNT_IMPLEMENTATION_ADDRESS=$(cast call --rpc-url ${NODE_RPC_URL} ${SIMPLE_ACCOUNT_FACTORY_ADDRESS} "accountImplementation()" | sed -r 's/^[.]*(0x)([0]{24})?([0-9a-zA-Z]{40})[.]*$/\1\3/g') && echo ${SIMPLE_ACCOUNT_IMPLEMENTATION_ADDRESS}
+
+forge verify-contract --watch --chain ${NETWORK_NAME} --verifier "etherscan" --etherscan-api-key ${ETHERSCAN_API_KEY} --compiler-version ${COMPILER_VERSION} --constructor-args $(cast abi-encode "constructor(address)" ${ENTRYPOINT_ADDRESS}) ${SIMPLE_ACCOUNT_IMPLEMENTATION_ADDRESS} "lib/account-abstraction/contracts/samples/SimpleAccount.sol:SimpleAccount"
+```
+
+### Deploy SimpleAccount contract via SimpleAccountFactory
+
+```shell
+cast send --rpc-url ${NODE_RPC_URL} --private-key ${DEPLOYER_PRIVATE_KEY} ${SIMPLE_ACCOUNT_FACTORY_ADDRESS} "createAccount(address owner,uint256 salt)" ${SIMPLE_ACCOUNT_OWNER_ADDRESS} ${SALT}
+```
+
+### Verify SimpleAccount contract
+
+- 1. Run the command below.
+
+```shell
+SIMPLE_ACCOUNT_ADDRESS=$(cast call --rpc-url ${NODE_RPC_URL} ${SIMPLE_ACCOUNT_FACTORY_ADDRESS} "getAddress(address owner,uint256 salt)" ${SIMPLE_ACCOUNT_OWNER_ADDRESS} ${SALT} | sed -r 's/^[.]*(0x)([0]{24})?([0-9a-zA-Z]{40})[.]*$/\1\3/g') && echo ${SIMPLE_ACCOUNT_ADDRESS}
+
+echo "Verification link: https://${NETWORK_NAME}.etherscan.io/address/${SIMPLE_ACCOUNT_ADDRESS}#code" && echo "Implementation contract: ${SIMPLE_ACCOUNT_IMPLEMENTATION_ADDRESS}"
+```
+
+- 2. Open the displayed verification link
+
+- 3. Click `Is this a proxy?` and `Verify`. Ensure the displayed implementation contract matches the sample output. Click `Save` to complete SimpleAccount verification.
+
+- 4. If necessary, you can also verify SimpleAccount (ERC1967Proxy) contract.
+
+```shell
+forge verify-contract --watch --chain ${NETWORK_NAME} --verifier "etherscan" --etherscan-api-key ${ETHERSCAN_API_KEY} --compiler-version ${COMPILER_VERSION} --constructor-args $(cast abi-encode "constructor(address,bytes)" ${SIMPLE_ACCOUNT_IMPLEMENTATION_ADDRESS} $(cast calldata "initialize(address)" ${SIMPLE_ACCOUNT_OWNER_ADDRESS})) ${SIMPLE_ACCOUNT_ADDRESS} "lib/openzeppelin-contracts/contracts/proxy/ERC1967/ERC1967Proxy.sol:ERC1967Proxy"
 ```
