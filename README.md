@@ -2,6 +2,12 @@
 
 ## Setup
 
+### Setup Foundry packages
+
+```
+$ forge install
+```
+
 ### Setup `.env.testnet`
 
 Copy from `.env.testnet.example` and fill the fields:
