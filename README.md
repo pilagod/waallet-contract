@@ -2,6 +2,12 @@
 
 ## Setup
 
+### Setup Foundry packages
+
+```
+$ forge install
+```
+
 ### Setup `.env.testnet`
 
 Copy from `.env.testnet.example` and fill the fields:
@@ -48,9 +54,8 @@ Clean resources for testnet:
 make testnet-down
 ```
 
-## Contract Testing
+## Local Contract Testing
 
 ```
-$ forge install
 $ forge test
 ```
