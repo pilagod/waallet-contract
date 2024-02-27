@@ -5,7 +5,8 @@ out = "out"
 libs = ["lib"]
 remappings = [
     "@aa/=lib/account-abstraction/contracts/",
-    "@openzeppelin/=lib/openzeppelin-contracts/"
+    "@openzeppelin/=lib/openzeppelin-contracts/",
+    "@imAccount/=lib/imAccount/"
 ]
 
 [fmt]

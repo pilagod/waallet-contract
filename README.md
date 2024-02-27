@@ -35,6 +35,11 @@ This testnet has following pre-deployed contracts:
 | PasskeyAccountFactory | 0x5FC8d32690cc91D4c39d9d3abcBD16989F875707 |                               |
 | PasskeyAccount        | **_Depending on PASSKEY env variables_**   | Balance: 100 ether            |
 | VerifyingPaymaster    | 0x2279B7A0a67DB372996a5FaB50D91eAA73d2eBe6 | EntryPoint deposit: 100 ether |
+| imAccount Implementation | 0x610178dA211FEF7D417bC0e6FeD39F05609AD788 |  |
+| ECDSAValidator | 0xB7f8BC63BbcaD18155201308C8f3540b07f84F5e  |  |
+| FallbackHandler | 0xA51c1fc2f0D1a1b8494Ed1FE312d7C3a78Ed91C0 |  |
+| imAccountFactory | 0x0DCd1Bf9A1b36cE34237eEaFef220932846BCD82 |  |
+| imAccountProxy (Wallet Contract) | 0xedf78a47be65e9206064e3f99902a969ff58ee93 |  Balance: 100 ether |
 
 > If you use default passkey, the PasskeyAccount address would be `0xf30a89a6a3836e2b270650822e3f3cebff3b7497`.
 
