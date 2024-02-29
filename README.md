@@ -2,6 +2,12 @@
 
 ## Setup
 
+### Setup Foundry packages
+
+```
+$ forge install
+```
+
 ### Setup `.env.testnet`
 
 Copy from `.env.testnet.example` and fill the fields:
@@ -40,8 +46,16 @@ This testnet has following pre-deployed contracts:
 
 The owner of these contracts is `0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266`, which is the first address derived from testing mnemonic `test test test test test test test test test test test junk`, and it has unlimited balance of ether.
 
+> Please make sure the contracts in the submodules(`lib`) are added into `src/Artifacts.sol` for being compiled.
+
 Clean resources for testnet:
 
 ```bash
 make testnet-down
+```
+
+## Local Contract Testing
+
+```
+$ forge test
 ```
