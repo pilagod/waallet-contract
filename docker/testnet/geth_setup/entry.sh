@@ -22,7 +22,7 @@ imAccount_implementation_address="0x610178dA211FEF7D417bC0e6FeD39F05609AD788"
 ecdsa_validator_address="0xB7f8BC63BbcaD18155201308C8f3540b07f84F5e"
 fallback_handler_address="0xA51c1fc2f0D1a1b8494Ed1FE312d7C3a78Ed91C0"
 imAccount_factory_address="0x0DCd1Bf9A1b36cE34237eEaFef220932846BCD82"
-SALT=0
+imAccount_salt=0
 
 # Deploy EntryPoint
 echo -e "\033[0;33m[Deploy EntryPoint]\033[0m"
@@ -98,11 +98,11 @@ cast send --rpc-url ${rpc_url} --private-key ${operator_private_key} ${imAccount
 echo -e "\033[0;33m[Create imAccount]\033[0m"
 validator_initializer=$(cast calldata "init(address owner)" ${operator_address})
 initializer=$(cast calldata "initialize(address,address,address,bytes calldata)" ${entry_point_address} ${fallback_handler_address} ${ecdsa_validator_address} ${validator_initializer})
-cast send --rpc-url ${rpc_url} --private-key ${operator_private_key} ${imAccount_factory_address} "createAccount(bytes memory initializer, uint256 salt)" ${initializer} ${SALT}
+cast send --rpc-url ${rpc_url} --private-key ${operator_private_key} ${imAccount_factory_address} "createAccount(bytes memory initializer, uint256 salt)" ${initializer} ${imAccount_salt}
 
 # Get imAccountProxy address
 echo -e "\033[0;33m[Get imAccount Address]\033[0m"
-imAccount_address=$(cast call --rpc-url ${rpc_url} ${imAccount_factory_address} "getAddress(uint256 salt)" ${SALT} | sed -r 's/^[.]*(0x)([0]{24}|)([0-9a-zA-Z]{40})[.]*$/\1\3/g')
+imAccount_address=$(cast call --rpc-url ${rpc_url} ${imAccount_factory_address} "getAddress(uint256 salt)" ${imAccount_salt} | sed -r 's/^[.]*(0x)([0]{24}|)([0-9a-zA-Z]{40})[.]*$/\1\3/g')
 echo ${imAccount_address}
 
 # Topup imAccountProxy
