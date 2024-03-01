@@ -148,9 +148,9 @@ forge verify-contract --watch --chain ${CHAIN_ID} --verifier "etherscan" --ether
 ```shell
 VALUE=0.1ether
 
-### Deposit for VerifyingPaymaster
+# Deposit for VerifyingPaymaster
 cast send --rpc-url ${NODE_RPC_URL} --private-key ${DEPLOYER_PRIVATE_KEY} ${ENTRYPOINT_ADDRESS} --value ${VALUE} "depositTo(address account)" ${VERIFYING_PAYMASTER_ADDRESS}
 
-### Check VerifyingPaymaster deposit amount.
+# Check VerifyingPaymaster deposit amount.
 cast from-wei $(cast to-dec $(cast call --rpc-url ${NODE_RPC_URL} ${ENTRYPOINT_ADDRESS} "balanceOf(address account)" ${VERIFYING_PAYMASTER_ADDRESS}))
 ```
