@@ -124,3 +124,33 @@ echo "Verification contract: ${SIMPLE_ACCOUNT_ADDRESS}" && echo "Implementation 
 ```shell
 forge verify-contract --watch --chain ${CHAIN_ID} --verifier "etherscan" --etherscan-api-key ${ETHERSCAN_API_KEY} --compiler-version ${COMPILER_VERSION} --constructor-args $(cast abi-encode "constructor(address,bytes)" ${SIMPLE_ACCOUNT_IMPLEMENTATION_ADDRESS} $(cast calldata "initialize(address)" ${SIMPLE_ACCOUNT_OWNER_ADDRESS})) ${SIMPLE_ACCOUNT_ADDRESS} "lib/openzeppelin-contracts/contracts/proxy/ERC1967/ERC1967Proxy.sol:ERC1967Proxy"
 ```
+
+## 3. Deploy and verify VerifyingPaymaster
+
+### Deploy VerifyingPaymaster contract
+
+- Edit the `.env.deployment` file by copying from `.env.deployment.example` and then run the following command.
+
+```shell
+source .env.deployment
+
+VERIFYING_PAYMASTER_ADDRESS=$(forge create --rpc-url ${NODE_RPC_URL} --private-key ${DEPLOYER_PRIVATE_KEY} --use ${COMPILER_VERSION} "lib/account-abstraction/contracts/samples/VerifyingPaymaster.sol:VerifyingPaymaster" --constructor-args ${ENTRYPOINT_ADDRESS} ${VERIFYING_PAYMASTER_OWNER_ADDRESS} | sed -nr 's/^Deployed to: (0x[0-9a-zA-Z]{40})[.]*$/\1/p')
+```
+
+### Verify VerifyingPaymaster contract
+
+```shell
+forge verify-contract --watch --chain ${CHAIN_ID} --verifier "etherscan" --etherscan-api-key ${ETHERSCAN_API_KEY} --compiler-version ${COMPILER_VERSION} --constructor-args $(cast abi-encode "constructor(address,address)" ${ENTRYPOINT_ADDRESS} ${VERIFYING_PAYMASTER_OWNER_ADDRESS}) ${VERIFYING_PAYMASTER_ADDRESS} "lib/account-abstraction/contracts/samples/VerifyingPaymaster.sol:VerifyingPaymaster"
+```
+
+### Deposit to EntryPoint for VerifyingPaymaster
+
+```shell
+VALUE=0.1ether
+
+### Deposit for VerifyingPaymaster
+cast send --rpc-url ${NODE_RPC_URL} --private-key ${DEPLOYER_PRIVATE_KEY} ${ENTRYPOINT_ADDRESS} --value ${VALUE} "depositTo(address account)" ${VERIFYING_PAYMASTER_ADDRESS}
+
+### Check VerifyingPaymaster deposit amount.
+cast from-wei $(cast to-dec $(cast call --rpc-url ${NODE_RPC_URL} ${ENTRYPOINT_ADDRESS} "balanceOf(address account)" ${VERIFYING_PAYMASTER_ADDRESS}))
+```
