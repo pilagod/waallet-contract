@@ -18,6 +18,11 @@ entry_point_address="0x5FbDB2315678afecb367f032d93F642f64180aa3"
 simple_account_factory_address="0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512"
 passkey_account_factory_address="0x5FC8d32690cc91D4c39d9d3abcBD16989F875707"
 verifying_paymaster_address="0x2279B7A0a67DB372996a5FaB50D91eAA73d2eBe6"
+imAccount_implementation_address="0x610178dA211FEF7D417bC0e6FeD39F05609AD788"
+ecdsa_validator_address="0xB7f8BC63BbcaD18155201308C8f3540b07f84F5e"
+fallback_handler_address="0xA51c1fc2f0D1a1b8494Ed1FE312d7C3a78Ed91C0"
+imAccount_factory_address="0x0DCd1Bf9A1b36cE34237eEaFef220932846BCD82"
+imAccount_salt=0
 
 # Deploy EntryPoint
 echo -e "\033[0;33m[Deploy EntryPoint]\033[0m"
@@ -68,3 +73,38 @@ forge create --rpc-url ${rpc_url} --private-key ${operator_private_key} lib/acco
 # Deposit to EntryPoint for PasskeyAccount
 echo -e "\033[0;33m[Deposit 100 ETH to EntryPoint for VerifyingPaymaster]\033[0m"
 cast send --rpc-url ${rpc_url} --private-key ${operator_private_key} ${entry_point_address} --value 100ether "depositTo(address account)" ${verifying_paymaster_address}
+
+# Deploy imAccount (implementation contract)
+echo -e "\033[0;33m[Deploy imAccount Implementation]\033[0m"
+forge create --rpc-url ${rpc_url} --private-key ${operator_private_key} lib/imAccount/src/account/imAccount.sol:imAccount
+
+# Deploy ECDSA Validator
+echo -e "\033[0;33m[Deploy ECDSA Validator]\033[0m"
+forge create --rpc-url ${rpc_url} --private-key ${operator_private_key} lib/imAccount/src/account/validators/ECDSAValidator.sol:ECDSAValidator
+
+# Deploy Fallback Handler
+echo -e "\033[0;33m[Deploy Fallback Handler]\033[0m"
+forge create --rpc-url ${rpc_url} --private-key ${operator_private_key} lib/imAccount/src/account/handler/FallbackHandler.sol:FallbackHandler
+
+# Deploy imAccountFactory
+echo -e "\033[0;33m[Deploy imAccountFactory]\033[0m"
+forge create --rpc-url ${rpc_url} --private-key ${operator_private_key} lib/imAccount/src/account/factory/imAccountFactory.sol:imAccountFactory --constructor-args ${operator_address}
+
+# Setup implementation address in imAccountFactory
+echo -e "\033[0;33m[Setup Implementation Address]\033[0m"
+cast send --rpc-url ${rpc_url} --private-key ${operator_private_key} ${imAccount_factory_address} "setImpl(address implAddr)" ${imAccount_implementation_address}
+
+# Deploy imAccountProxy (Create a new wallet)
+echo -e "\033[0;33m[Create imAccount]\033[0m"
+validator_initializer=$(cast calldata "init(address owner)" ${operator_address})
+initializer=$(cast calldata "initialize(address,address,address,bytes calldata)" ${entry_point_address} ${fallback_handler_address} ${ecdsa_validator_address} ${validator_initializer})
+cast send --rpc-url ${rpc_url} --private-key ${operator_private_key} ${imAccount_factory_address} "createAccount(bytes memory initializer, uint256 salt)" ${initializer} ${imAccount_salt}
+
+# Get imAccountProxy address
+echo -e "\033[0;33m[Get imAccount Address]\033[0m"
+imAccount_address=$(cast call --rpc-url ${rpc_url} ${imAccount_factory_address} "getAddress(uint256 salt)" ${imAccount_salt} | sed -r 's/^[.]*(0x)([0]{24}|)([0-9a-zA-Z]{40})[.]*$/\1\3/g')
+echo ${imAccount_address}
+
+# Topup imAccountProxy
+echo -e "\033[0;33m[Transfer 100 ETH to imAccount]\033[0m"
+cast send --rpc-url ${rpc_url} --private-key ${operator_private_key} ${imAccount_address} --value 100ether
