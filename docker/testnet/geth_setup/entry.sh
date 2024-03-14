@@ -108,3 +108,7 @@ echo ${imAccount_address}
 # Topup imAccountProxy
 echo -e "\033[0;33m[Transfer 100 ETH to imAccount]\033[0m"
 cast send --rpc-url ${rpc_url} --private-key ${operator_private_key} ${imAccount_address} --value 100ether
+
+# Deploy WebAuthn Validator
+echo -e "\033[0;33m[Deploy WebAuthn Validator]\033[0m"
+forge create --rpc-url ${rpc_url} --private-key ${operator_private_key} lib/imAccount/src/account/validators/WebAuthnValidator.sol:WebAuthnValidator
