@@ -43,7 +43,7 @@ This testnet has following pre-deployed contracts:
 | VerifyingPaymaster               | 0x2279B7A0a67DB372996a5FaB50D91eAA73d2eBe6 | EntryPoint deposit: 100 ether |
 | imAccount Implementation         | 0x610178dA211FEF7D417bC0e6FeD39F05609AD788 |                               |
 | ECDSAValidator                   | 0xB7f8BC63BbcaD18155201308C8f3540b07f84F5e |     
-| WebAuthnValidator                   | 0x9A9f2CCfdE556A7E9Ff0848998Aa4a0CFD8863AE |                              |
+| WebAuthnValidator                 | 0x9A9f2CCfdE556A7E9Ff0848998Aa4a0CFD8863AE |                              |
 | FallbackHandler                  | 0xA51c1fc2f0D1a1b8494Ed1FE312d7C3a78Ed91C0 |                               |
 | imAccountFactory                 | 0x0DCd1Bf9A1b36cE34237eEaFef220932846BCD82 |                               |
 | imAccountProxy (Wallet Contract) | 0xedf78a47be65e9206064e3f99902a969ff58ee93 | Balance: 100 ether            |
