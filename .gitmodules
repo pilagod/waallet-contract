@@ -9,4 +9,4 @@
 	url = https://github.com/OpenZeppelin/openzeppelin-contracts
 [submodule "lib/imAccount"]
 	path = lib/imAccount
-	url = git@github.com:consenlabs/account-abstraction.git
+	url = https://github.com/consenlabs/account-abstraction
