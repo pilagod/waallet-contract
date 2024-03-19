@@ -6,5 +6,6 @@ import { SimpleAccountFactory } from "@aa/samples/SimpleAccountFactory.sol";
 import { VerifyingPaymaster } from "@aa/samples/VerifyingPaymaster.sol";
 import { imAccount } from "@imAccount/src/account/imAccount.sol";
 import { ECDSAValidator } from "@imAccount/src/account/validators/ECDSAValidator.sol";
+import { WebAuthnValidator } from "@imAccount/src/account/validators/WebAuthnValidator.sol";
 import { FallbackHandler } from "@imAccount/src/account/handler/FallbackHandler.sol";
 import { imAccountFactory } from "@imAccount/src/account/factory/imAccountFactory.sol";

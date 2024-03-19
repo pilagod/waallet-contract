@@ -108,3 +108,24 @@ echo ${imAccount_address}
 # Topup imAccountProxy
 echo -e "\033[0;33m[Transfer 100 ETH to imAccount]\033[0m"
 cast send --rpc-url ${rpc_url} --private-key ${operator_private_key} ${imAccount_address} --value 100ether
+
+# Deploy WebAuthn Validator
+echo -e "\033[0;33m[Deploy WebAuthn Validator]\033[0m"
+forge create --rpc-url ${rpc_url} --private-key ${operator_private_key} lib/imAccount/src/account/validators/WebAuthnValidator.sol:WebAuthnValidator
+
+# Topup Foundry Deployer Signer
+FOUNDRY_SIGNER_ADDRESS="0x3fab184622dc19b6109349b94811493bf2a45362"
+cast send --rpc-url ${rpc_url} --private-key ${operator_private_key} ${FOUNDRY_SIGNER_ADDRESS} --value 100ether
+
+# Deploy Foundry CREATE2 Factory
+TRANSACTION=0xf8a58085174876e800830186a08080b853604580600e600039806000f350fe7fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffe03601600081602082378035828234f58015156039578182fd5b8082525050506014600cf31ba02222222222222222222222222222222222222222222222222222222222222222a02222222222222222222222222222222222222222222222222222222222222222
+curl ${rpc_url} -X 'POST' -H 'Content-Type: application/json' --data "{\"jsonrpc\":\"2.0\", \"id\":1, \"method\": \"eth_sendRawTransaction\", \"params\": [\"$TRANSACTION\"]}"
+
+# Deploy P256 Verifier
+echo -e "\033[0;33m[Deploy P256 Verifier]\033[0m"
+cd /
+git clone https://github.com/daimo-eth/p256-verifier.git
+cd p256-verifier
+git checkout 4287b1714c2457514c97f47f55ff830d310a60cb
+forge install
+forge script ./script/Deploy.s.sol:DeployScript --rpc-url ${rpc_url} --broadcast --private-key ${operator_private_key}
