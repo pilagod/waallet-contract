@@ -4,6 +4,11 @@ apk --no-cache add curl
 
 rpc_url="http://geth:8545"
 
+./wait.sh ${rpc_url} -t 60 || { 
+    echo "wait for geth failed";
+    exit 1; 
+}
+
 # Setup signer for blocks
 curl -d '{"id":1,"jsonrpc":"2.0","method":"clique_propose","params":["0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",true]}' -H "Content-Type: application/json" -X POST ${rpc_url}
 

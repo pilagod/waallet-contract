@@ -35,7 +35,7 @@ services:
     working_dir: /waallet-contract
     depends_on:
       - geth
-    command: ./docker/testnet/geth_setup/entry.sh
+    command: ./docker/testnet/script/geth_setup.sh
     environment:
       - PASSKEY_CREDENTIAL_ID=${PASSKEY_CREDENTIAL_ID}
       - PASSKEY_X=${PASSKEY_X}
@@ -43,32 +43,71 @@ services:
     volumes:
       - ../../:/waallet-contract
 
-  rundler:
-    image: pilagod/rundler
+  rundler_v0_6:
+    image: pilagod/rundler:v0.2
+    command: node
     ports:
       # RPC port
-      - "3000:3000"
+      - "3006:3000"
       # Metrics port
-      - "8080:8080"
+      - "8006:8080"
     depends_on:
       - geth
       - geth_setup 
     environment:
       - RUST_LOG=debug
+      - ENTRY_POINT_V0_7_ENABLED=false
       - CHAIN_ID=1337
+      - CHAIN_ENTRY_POINT_ADDRESS_V0_6=0x5FbDB2315678afecb367f032d93F642f64180aa3
       - NODE_HTTP=http://geth:8545
       - BUILDER_MAX_BUNDLE_SIZE=1
       - BUILDER_PRIVATE_KEY=0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80
-      - ENTRY_POINTS=0x5FbDB2315678afecb367f032d93F642f64180aa3
       - MIN_STAKE_VALUE=0
       - MIN_UNSTAKE_DELAY=0
       - RPC_API=eth,debug,rundler
       - RPC_TIMEOUT_SECONDS=600
 
+  rundler_v0_7:
+    image: pilagod/rundler:v0.2
+    command: node
+    ports:
+      # RPC port
+      - "3007:3000"
+      # Metrics port
+      - "8007:8080"
+    depends_on:
+      - geth
+      - geth_setup
+    environment:
+      - RUST_LOG=debug
+      - ENTRY_POINT_V0_6_ENABLED=false
+      - CHAIN_ID=1337
+      - CHAIN_ENTRY_POINT_ADDRESS_V0_7=0x0000000071727De22E5E9d8BAf0edAc6f37da032
+      - NODE_HTTP=http://geth:8545
+      - BUILDER_MAX_BUNDLE_SIZE=1
+      - BUILDER_PRIVATE_KEY=0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80
+      - MIN_STAKE_VALUE=0
+      - MIN_UNSTAKE_DELAY=0
+      - RPC_API=eth,debug,rundler
+      - RPC_TIMEOUT_SECONDS=600
+
+  rundler:
+    image: pilagod/rundler-proxy
+    depends_on:
+      - rundler_v0_6
+      - rundler_v0_7
+    ports:
+      - "3000:3000"
+    environment:
+      - RUNDLER_V0_6=http://rundler:3006
+      - RUNDLER_V0_7=http://rundler:3007
+
   rundler_setup:
     image: alpine:3
     depends_on:
+      - rundler_v0_6
+      - rundler_v0_7
       - rundler
-    command: /rundler_setup/entry.sh
+    command: /script/rundler_setup.sh
     volumes:
-      - ./rundler_setup:/rundler_setup
+      - ./script:/script
