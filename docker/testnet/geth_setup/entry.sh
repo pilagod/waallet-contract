@@ -1,11 +1,11 @@
 #!/bin/sh
 
-apk --no-cache add curl
+apk update && apk --no-cache add bash curl coreutils
 
 rpc_url="http://geth:8545"
 
-./wait.sh ${rpc_url} -t 60 || { 
-    echo "wait for geth failed";
+/script/wait.sh geth:8545 -t 60 || {
+    echo "wait for ${rpc_url} failed";
     exit 1; 
 }
 

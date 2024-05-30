@@ -1,11 +1,11 @@
 #!/bin/sh
 
-apk --no-cache add curl
+apk update && apk --no-cache add bash curl coreutils
 
 rundler_url = "http://rundler:3000"
 
-./wait.sh ${rundler_url} -t 60 || { 
-    echo "wait for rundler failed";
+/script/wait.sh rundler:3000 -t 60 || {
+    echo "wait for ${rundler_url} failed";
     exit 1; 
 }
 

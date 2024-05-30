@@ -35,17 +35,17 @@ services:
     working_dir: /waallet-contract
     depends_on:
       - geth
-    command: ./docker/testnet/script/geth_setup.sh
+    command: ./docker/testnet/geth_setup/entry.sh
     environment:
       - PASSKEY_CREDENTIAL_ID=${PASSKEY_CREDENTIAL_ID}
       - PASSKEY_X=${PASSKEY_X}
       - PASSKEY_Y=${PASSKEY_Y}
     volumes:
       - ../../:/waallet-contract
+      - ./script:/script
 
   rundler_v0_6:
-    image: pilagod/rundler:v0.2
-    command: node
+    image: pilagod/rundler:v0.1
     ports:
       # RPC port
       - "3006:3000"
@@ -53,19 +53,43 @@ services:
       - "8006:8080"
     depends_on:
       - geth
-      - geth_setup 
     environment:
       - RUST_LOG=debug
-      - ENTRY_POINT_V0_7_ENABLED=false
       - CHAIN_ID=1337
-      - CHAIN_ENTRY_POINT_ADDRESS_V0_6=0x5FbDB2315678afecb367f032d93F642f64180aa3
       - NODE_HTTP=http://geth:8545
       - BUILDER_MAX_BUNDLE_SIZE=1
       - BUILDER_PRIVATE_KEY=0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80
+      - ENTRY_POINTS=0x5FbDB2315678afecb367f032d93F642f64180aa3
       - MIN_STAKE_VALUE=0
       - MIN_UNSTAKE_DELAY=0
       - RPC_API=eth,debug,rundler
       - RPC_TIMEOUT_SECONDS=600
+
+  # KNOWN ISSUE:
+  # * Estimate user operation gas with init code would cause no reason validation reverted.
+  # rundler_v0_6:
+  #   image: pilagod/rundler:v0.2
+  #   command: node
+  #   ports:
+  #     # RPC port
+  #     - "3006:3000"
+  #     # Metrics port
+  #     - "8006:8080"
+  #   depends_on:
+  #     - geth
+  #     - geth_setup
+  #   environment:
+  #     - RUST_LOG=debug
+  #     - ENTRY_POINT_V0_7_ENABLED=false
+  #     - CHAIN_ID=1337
+  #     - CHAIN_ENTRY_POINT_ADDRESS_V0_6=0x5FbDB2315678afecb367f032d93F642f64180aa3
+  #     - NODE_HTTP=http://geth:8545
+  #     - BUILDER_MAX_BUNDLE_SIZE=1
+  #     - BUILDER_PRIVATE_KEY=0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80
+  #     - MIN_STAKE_VALUE=0
+  #     - MIN_UNSTAKE_DELAY=0
+  #     - RPC_API=eth,debug,rundler
+  #     - RPC_TIMEOUT_SECONDS=600
 
   rundler_v0_7:
     image: pilagod/rundler:v0.2
@@ -99,8 +123,8 @@ services:
     ports:
       - "3000:3000"
     environment:
-      - RUNDLER_V0_6=http://rundler:3006
-      - RUNDLER_V0_7=http://rundler:3007
+      - RUNDLER_V0_6=http://rundler_v0_6:3000
+      - RUNDLER_V0_7=http://rundler_v0_7:3000
 
   rundler_setup:
     image: alpine:3
@@ -108,6 +132,7 @@ services:
       - rundler_v0_6
       - rundler_v0_7
       - rundler
-    command: /script/rundler_setup.sh
+    command: /rundler_setup/entry.sh
     volumes:
+      - ./rundler_setup:/rundler_setup
       - ./script:/script
