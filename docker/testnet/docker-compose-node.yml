@@ -33,7 +33,7 @@ services:
       - testnet
 
   rundler_v0_6:
-    image: pilagod/rundler:v0.1
+    image: pilagod/rundler:v0.0
     ports:
       # RPC port
       - "3006:3000"
