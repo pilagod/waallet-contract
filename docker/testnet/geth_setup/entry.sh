@@ -1,8 +1,13 @@
 #!/bin/sh
 
-apk --no-cache add curl
+apk update && apk --no-cache add bash curl coreutils
 
 rpc_url="http://geth:8545"
+
+/script/wait.sh geth:8545 -t 60 || {
+    echo "wait for ${rpc_url} failed";
+    exit 1; 
+}
 
 # Setup signer for blocks
 curl -d '{"id":1,"jsonrpc":"2.0","method":"clique_propose","params":["0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",true]}' -H "Content-Type: application/json" -X POST ${rpc_url}
