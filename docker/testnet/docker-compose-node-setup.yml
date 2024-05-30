@@ -10,6 +10,7 @@ services:
       - PASSKEY_Y=${PASSKEY_Y}
     volumes:
       - ../../:/waallet-contract
+      - ./script:/script
     networks:
       - testnet
 
@@ -18,6 +19,7 @@ services:
     command: /rundler_setup/entry.sh
     volumes:
       - ./rundler_setup:/rundler_setup
+      - ./script:/script
     networks:
       - testnet
 
