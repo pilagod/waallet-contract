@@ -2,9 +2,9 @@
 pragma solidity ^0.8.13;
 
 import { Base64Url } from "../utils/Base64Url.sol";
-import { IEntryPoint, UserOperation } from "@aa/interfaces/IEntryPoint.sol";
+import { IEntryPoint, UserOperation } from "@aa6/interfaces/IEntryPoint.sol";
 import { IPasskeyAccount, Passkey } from "../interfaces/IPasskeyAccount.sol";
-import { SimpleAccount } from "@aa/samples/SimpleAccount.sol";
+import { SimpleAccount } from "@aa6/samples/SimpleAccount.sol";
 
 contract PasskeyAccount is SimpleAccount, IPasskeyAccount {
     address public immutable p256Verifier;

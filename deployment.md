@@ -82,13 +82,13 @@ forge verify-contract --watch --chain ${CHAIN_ID} --verifier "etherscan" --ether
 ```shell
 source .env.deployment
 
-SIMPLE_ACCOUNT_FACTORY_ADDRESS=$(forge create --rpc-url ${NODE_RPC_URL} --private-key ${DEPLOYER_PRIVATE_KEY} --use ${COMPILER_VERSION} "lib/account-abstraction/contracts/samples/SimpleAccountFactory.sol:SimpleAccountFactory" --constructor-args ${ENTRYPOINT_ADDRESS} | sed -nr 's/^Deployed to: (0x[0-9a-zA-Z]{40})[.]*$/\1/p')
+SIMPLE_ACCOUNT_FACTORY_ADDRESS=$(forge create --rpc-url ${NODE_RPC_URL} --private-key ${DEPLOYER_PRIVATE_KEY} --use ${COMPILER_VERSION} "lib/account-abstraction/v0.6.0/contracts/samples/SimpleAccountFactory.sol:SimpleAccountFactory" --constructor-args ${ENTRYPOINT_ADDRESS} | sed -nr 's/^Deployed to: (0x[0-9a-zA-Z]{40})[.]*$/\1/p')
 ```
 
 ### Verify SimpleAccountFactory contract
 
 ```shell
-forge verify-contract --watch --chain ${CHAIN_ID} --verifier "etherscan" --etherscan-api-key ${ETHERSCAN_API_KEY} --compiler-version ${COMPILER_VERSION} --constructor-args $(cast abi-encode "constructor(address)" ${ENTRYPOINT_ADDRESS}) ${SIMPLE_ACCOUNT_FACTORY_ADDRESS} "lib/account-abstraction/contracts/samples/SimpleAccountFactory.sol:SimpleAccountFactory"
+forge verify-contract --watch --chain ${CHAIN_ID} --verifier "etherscan" --etherscan-api-key ${ETHERSCAN_API_KEY} --compiler-version ${COMPILER_VERSION} --constructor-args $(cast abi-encode "constructor(address)" ${ENTRYPOINT_ADDRESS}) ${SIMPLE_ACCOUNT_FACTORY_ADDRESS} "lib/account-abstraction/v0.6.0/contracts/samples/SimpleAccountFactory.sol:SimpleAccountFactory"
 ```
 
 ### Verify SimpleAccount implementation contract
@@ -96,7 +96,7 @@ forge verify-contract --watch --chain ${CHAIN_ID} --verifier "etherscan" --ether
 ```shell
 SIMPLE_ACCOUNT_IMPLEMENTATION_ADDRESS=$(cast call --rpc-url ${NODE_RPC_URL} ${SIMPLE_ACCOUNT_FACTORY_ADDRESS} "accountImplementation()" | sed -r 's/^[.]*(0x)([0]{24})?([0-9a-zA-Z]{40})[.]*$/\1\3/g')
 
-forge verify-contract --watch --chain ${CHAIN_ID} --verifier "etherscan" --etherscan-api-key ${ETHERSCAN_API_KEY} --compiler-version ${COMPILER_VERSION} --constructor-args $(cast abi-encode "constructor(address)" ${ENTRYPOINT_ADDRESS}) ${SIMPLE_ACCOUNT_IMPLEMENTATION_ADDRESS} "lib/account-abstraction/contracts/samples/SimpleAccount.sol:SimpleAccount"
+forge verify-contract --watch --chain ${CHAIN_ID} --verifier "etherscan" --etherscan-api-key ${ETHERSCAN_API_KEY} --compiler-version ${COMPILER_VERSION} --constructor-args $(cast abi-encode "constructor(address)" ${ENTRYPOINT_ADDRESS}) ${SIMPLE_ACCOUNT_IMPLEMENTATION_ADDRESS} "lib/account-abstraction/v0.6.0/contracts/samples/SimpleAccount.sol:SimpleAccount"
 ```
 
 ### Deploy SimpleAccount contract via SimpleAccountFactory
@@ -134,13 +134,13 @@ forge verify-contract --watch --chain ${CHAIN_ID} --verifier "etherscan" --ether
 ```shell
 source .env.deployment
 
-VERIFYING_PAYMASTER_ADDRESS=$(forge create --rpc-url ${NODE_RPC_URL} --private-key ${DEPLOYER_PRIVATE_KEY} --use ${COMPILER_VERSION} "lib/account-abstraction/contracts/samples/VerifyingPaymaster.sol:VerifyingPaymaster" --constructor-args ${ENTRYPOINT_ADDRESS} ${VERIFYING_PAYMASTER_OWNER_ADDRESS} | sed -nr 's/^Deployed to: (0x[0-9a-zA-Z]{40})[.]*$/\1/p')
+VERIFYING_PAYMASTER_ADDRESS=$(forge create --rpc-url ${NODE_RPC_URL} --private-key ${DEPLOYER_PRIVATE_KEY} --use ${COMPILER_VERSION} "lib/account-abstraction/v0.6.0/contracts/samples/VerifyingPaymaster.sol:VerifyingPaymaster" --constructor-args ${ENTRYPOINT_ADDRESS} ${VERIFYING_PAYMASTER_OWNER_ADDRESS} | sed -nr 's/^Deployed to: (0x[0-9a-zA-Z]{40})[.]*$/\1/p')
 ```
 
 ### Verify VerifyingPaymaster contract
 
 ```shell
-forge verify-contract --watch --chain ${CHAIN_ID} --verifier "etherscan" --etherscan-api-key ${ETHERSCAN_API_KEY} --compiler-version ${COMPILER_VERSION} --constructor-args $(cast abi-encode "constructor(address,address)" ${ENTRYPOINT_ADDRESS} ${VERIFYING_PAYMASTER_OWNER_ADDRESS}) ${VERIFYING_PAYMASTER_ADDRESS} "lib/account-abstraction/contracts/samples/VerifyingPaymaster.sol:VerifyingPaymaster"
+forge verify-contract --watch --chain ${CHAIN_ID} --verifier "etherscan" --etherscan-api-key ${ETHERSCAN_API_KEY} --compiler-version ${COMPILER_VERSION} --constructor-args $(cast abi-encode "constructor(address,address)" ${ENTRYPOINT_ADDRESS} ${VERIFYING_PAYMASTER_OWNER_ADDRESS}) ${VERIFYING_PAYMASTER_ADDRESS} "lib/account-abstraction/v0.6.0/contracts/samples/VerifyingPaymaster.sol:VerifyingPaymaster"
 ```
 
 ### Deposit to EntryPoint for VerifyingPaymaster
