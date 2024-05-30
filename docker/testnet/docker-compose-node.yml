@@ -65,7 +65,6 @@ services:
       - "8007:8080"
     depends_on:
       - geth
-      - geth_setup
     environment:
       - RUST_LOG=debug
       - ENTRY_POINT_V0_6_ENABLED=false
