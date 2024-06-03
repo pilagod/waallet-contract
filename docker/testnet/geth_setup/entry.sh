@@ -21,11 +21,11 @@ verifying_paymaster_address="0x2279B7A0a67DB372996a5FaB50D91eAA73d2eBe6"
 
 # Deploy EntryPoint
 echo -e "\033[0;33m[Deploy EntryPoint]\033[0m"
-forge create --rpc-url ${rpc_url} --private-key ${operator_private_key} lib/account-abstraction/v0.6.0/contracts/core/EntryPoint.sol:EntryPoint
+forge create --rpc-url ${rpc_url} --private-key ${operator_private_key} lib/0.6/account-abstraction/contracts/core/EntryPoint.sol:EntryPoint
 
 # Deploy SimpleAccountFactory
 echo -e "\033[0;33m[Deploy SimpleAccountFactory]\033[0m"
-forge create --rpc-url ${rpc_url} --private-key ${operator_private_key} lib/account-abstraction/v0.6.0/contracts/samples/SimpleAccountFactory.sol:SimpleAccountFactory --constructor-args ${entry_point_address}
+forge create --rpc-url ${rpc_url} --private-key ${operator_private_key} lib/0.6/account-abstraction/contracts/samples/SimpleAccountFactory.sol:SimpleAccountFactory --constructor-args ${entry_point_address}
 
 # Deploy SimpleAccount
 echo -e "\033[0;33m[Create SimpleAccount]\033[0m"
@@ -46,7 +46,7 @@ forge create --rpc-url ${rpc_url} --private-key ${operator_private_key} src/Coun
 
 # Deploy PasskeyAccountFactory
 echo -e "\033[0;33m[Deploy PasskeyAccountFactory]\033[0m"
-forge create --rpc-url ${rpc_url} --private-key ${operator_private_key} src/account/PasskeyAccountFactory.sol:PasskeyAccountFactory --constructor-args ${entry_point_address}
+forge create --rpc-url ${rpc_url} --private-key ${operator_private_key} src/0.6/account/PasskeyAccountFactory.sol:PasskeyAccountFactory --constructor-args ${entry_point_address}
 
 # Deploy PasskeyAccount
 echo -e "\033[0;33m[Create PasskeyAccount]\033[0m"
@@ -63,7 +63,7 @@ cast send --rpc-url ${rpc_url} --private-key ${operator_private_key} ${passkey_a
 
 # Deploy VerifyingPaymaster
 echo -e "\033[0;33m[Deploy VerifyingPaymaster]\033[0m"
-forge create --rpc-url ${rpc_url} --private-key ${operator_private_key} lib/account-abstraction/v0.6.0/contracts/samples/VerifyingPaymaster.sol:VerifyingPaymaster --constructor-args ${entry_point_address} ${operator_address}
+forge create --rpc-url ${rpc_url} --private-key ${operator_private_key} lib/0.6/account-abstraction/contracts/samples/VerifyingPaymaster.sol:VerifyingPaymaster --constructor-args ${entry_point_address} ${operator_address}
 
 # Deposit to EntryPoint for VerifyingPaymaster
 echo -e "\033[0;33m[Deposit 100 ETH to EntryPoint for VerifyingPaymaster]\033[0m"
