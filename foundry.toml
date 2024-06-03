@@ -4,9 +4,12 @@ src = "src"
 out = "out"
 libs = ["lib"]
 remappings = [
-    "@aa6/=lib/account-abstraction/v0.6.0/contracts/",
-    "@aa7/=lib/account-abstraction/v0.7.0/contracts/",
-    "@openzeppelin/=lib/openzeppelin-contracts/"
+    "@aa6=lib/0.6/account-abstraction/contracts",
+    "@aa7=lib/0.7/account-abstraction/contracts",
+    "lib/0.6/account-abstraction/contracts:@openzeppelin=lib/0.6/openzeppelin-contracts",
+    "lib/0.7/account-abstraction/contracts:@openzeppelin=lib/0.7/openzeppelin-contracts",
+    "@openzeppelin4=lib/0.6/openzeppelin-contracts",
+    "@openzeppelin5=lib/0.7/openzeppelin-contracts",
 ]
 
 [fmt]
