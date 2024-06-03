@@ -10,8 +10,9 @@ import {
     UserOperation, UserOperationLib
 } from "@aa6/interfaces/UserOperation.sol";
 
-import { PasskeyAccount, Base64Url } from "src/account/PasskeyAccount.sol";
-import { PasskeyAccountFactory } from "src/account/PasskeyAccountFactory.sol";
+import { PasskeyAccount, Base64Url } from "src/0.6/account/PasskeyAccount.sol";
+import { PasskeyAccountFactory } from
+    "src/0.6/account/PasskeyAccountFactory.sol";
 
 contract PasskeyAccountTest is Test {
     using UserOperationLib for UserOperation;
@@ -31,7 +32,7 @@ contract PasskeyAccountTest is Test {
     function setUp() public {
         // Align the entryPoint address with the one on the Gethnode and Mainnet
         bytes memory entryPointBytecode =
-            vm.getCode("EntryPoint.sol:EntryPoint");
+            vm.getCode("Artifacts.sol:EntryPoint6");
         vm.etch(entryPointAddr, entryPointBytecode);
         entryPoint = IEntryPoint(entryPointAddr);
 
