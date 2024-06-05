@@ -4,7 +4,8 @@ pragma solidity ^0.8.13;
 
 import { Test } from "forge-std/Test.sol";
 import { console2 } from "forge-std/console2.sol";
-
+import { EntryPoint } from
+    "@account-abstraction/0.6/contracts/core/EntryPoint.sol";
 import { IEntryPoint } from
     "@account-abstraction/0.6/contracts/interfaces/IEntryPoint.sol";
 import {
@@ -27,15 +28,35 @@ contract PasskeyAccountTest is Test {
         104273800132786176334597151467609377740095818152192999025225464410568038480397;
     uint256 constant salt = 0;
 
+    EntryPoint public entryPointEntity;
     IEntryPoint public entryPoint;
     PasskeyAccountFactory public passkeyAccountFactory;
     PasskeyAccount public passkeyAccount;
 
     function setUp() public {
+        entryPointEntity = new EntryPoint();
+        address entryPointEntityAddress = address(entryPointEntity);
+
+        uint256 entryPointEntityBytecodeSize;
+        // Get the size of the code at the specified address
+        assembly {
+            entryPointEntityBytecodeSize := extcodesize(entryPointEntityAddress)
+        }
+        // Initialize a bytes array to hold the code
+        bytes memory entryPointEntityBytecode =
+            new bytes(entryPointEntityBytecodeSize);
+        // Copy the code to the bytes array
+        assembly {
+            extcodecopy(
+                entryPointEntityAddress,
+                add(entryPointEntityBytecode, 0x20),
+                0,
+                entryPointEntityBytecodeSize
+            )
+        }
+
         // Align the entryPoint address with the one on the Gethnode and Mainnet
-        bytes memory entryPointBytecode =
-            vm.getCode("Artifacts.sol:EntryPoint0p6");
-        vm.etch(entryPointAddr, entryPointBytecode);
+        vm.etch(entryPointAddr, entryPointEntityBytecode);
         entryPoint = IEntryPoint(entryPointAddr);
 
         // Deploy the PasskeyAccountFactory and PasskeyAccount

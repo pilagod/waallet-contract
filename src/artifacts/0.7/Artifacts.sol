@@ -7,5 +7,3 @@ import { SimpleAccountFactory } from
     "@account-abstraction/0.7/contracts/samples/SimpleAccountFactory.sol";
 import { VerifyingPaymaster } from
     "@account-abstraction/0.7/contracts/samples/VerifyingPaymaster.sol";
-
-contract EntryPoint0p7 is EntryPoint { }
