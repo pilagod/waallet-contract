@@ -28,35 +28,15 @@ contract PasskeyAccountTest is Test {
         104273800132786176334597151467609377740095818152192999025225464410568038480397;
     uint256 constant salt = 0;
 
-    EntryPoint public entryPointEntity;
     IEntryPoint public entryPoint;
     PasskeyAccountFactory public passkeyAccountFactory;
     PasskeyAccount public passkeyAccount;
 
     function setUp() public {
-        entryPointEntity = new EntryPoint();
-        address entryPointEntityAddress = address(entryPointEntity);
-
-        uint256 entryPointEntityBytecodeSize;
-        // Get the size of the code at the specified address
-        assembly {
-            entryPointEntityBytecodeSize := extcodesize(entryPointEntityAddress)
-        }
-        // Initialize a bytes array to hold the code
-        bytes memory entryPointEntityBytecode =
-            new bytes(entryPointEntityBytecodeSize);
-        // Copy the code to the bytes array
-        assembly {
-            extcodecopy(
-                entryPointEntityAddress,
-                add(entryPointEntityBytecode, 0x20),
-                0,
-                entryPointEntityBytecodeSize
-            )
-        }
+        bytes memory entryPointCreationCode = type(EntryPoint).creationCode;
 
         // Align the entryPoint address with the one on the Gethnode and Mainnet
-        vm.etch(entryPointAddr, entryPointEntityBytecode);
+        vm.etch(entryPointAddr, entryPointCreationCode);
         entryPoint = IEntryPoint(entryPointAddr);
 
         // Deploy the PasskeyAccountFactory and PasskeyAccount
