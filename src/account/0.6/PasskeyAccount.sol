@@ -5,9 +5,10 @@ import { Base64Url } from "./utils/Base64Url.sol";
 import {
     IEntryPoint,
     UserOperation
-} from "@aa/0.6/contracts/interfaces/IEntryPoint.sol";
+} from "@account-abstraction/0.6/contracts/interfaces/IEntryPoint.sol";
 import { IPasskeyAccount, Passkey } from "../../interfaces/IPasskeyAccount.sol";
-import { SimpleAccount } from "@aa/0.6/contracts/samples/SimpleAccount.sol";
+import { SimpleAccount } from
+    "@account-abstraction/0.6/contracts/samples/SimpleAccount.sol";
 
 contract PasskeyAccount is SimpleAccount, IPasskeyAccount {
     address public immutable p256Verifier;

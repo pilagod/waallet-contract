@@ -5,11 +5,12 @@ pragma solidity ^0.8.13;
 import { Test } from "forge-std/Test.sol";
 import { console2 } from "forge-std/console2.sol";
 
-import { IEntryPoint } from "@aa/0.6/contracts/interfaces/IEntryPoint.sol";
+import { IEntryPoint } from
+    "@account-abstraction/0.6/contracts/interfaces/IEntryPoint.sol";
 import {
     UserOperation,
     UserOperationLib
-} from "@aa/0.6/contracts/interfaces/UserOperation.sol";
+} from "@account-abstraction/0.6/contracts/interfaces/UserOperation.sol";
 
 import { PasskeyAccount, Base64Url } from "src/account/0.6/PasskeyAccount.sol";
 import { PasskeyAccountFactory } from
