@@ -14,14 +14,16 @@ operator_private_key="0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7b
 # For deploying periphery contracts
 deployer_1_address="0x70997970C51812dc3A010C7d01b50e0d17dc79C8"
 deployer_1_private_key="0x59c6995e998f97a5a0044966f0945389dc9e86dae88c7a8412f4603b6b78690d"
-cast send --rpc-url ${rpc_url} --private-key ${operator_private_key} ${deployer_1_address} --value 100ether
 # For deploying account abstraction v0.6.0 contracts
 deployer_2_address="0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC"
 deployer_2_private_key="0x5de4111afa1a4b94908f83103eb1f1706367c2e68ca870fc3fb9a804cdab365a"
-cast send --rpc-url ${rpc_url} --private-key ${operator_private_key} ${deployer_2_address} --value 100ether
 # For deploying account abstraction v0.7.0 contracts
 deployer_3_address="0x90F79bf6EB2c4f870365E785982E1f101E93b906"
 deployer_3_private_key="0x7c852118294e51e653712a81e05800f419141751be58f605c371e15141b007a6"
+
+# Topup deployer
+cast send --rpc-url ${rpc_url} --private-key ${operator_private_key} ${deployer_1_address} --value 100ether
+cast send --rpc-url ${rpc_url} --private-key ${operator_private_key} ${deployer_2_address} --value 100ether
 cast send --rpc-url ${rpc_url} --private-key ${operator_private_key} ${deployer_3_address} --value 100ether
 
 passkey_credential_id=${PASSKEY_CREDENTIAL_ID:-"9h5F3DgLSjSMdnVOadmhCw"}
