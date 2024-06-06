@@ -44,12 +44,12 @@ This testnet has following pre-deployed contracts:
 | --------------------- | ------------------------------------------ | --------------------------- |
 | EntryPoint            | 0x663F3ad617193148711d28f5334eE4Ed07016602 |                             |
 | SimpleAccountFactory  | 0x2E983A1Ba5e8b38AAAeC4B440B9dDcFBf72E15d1 |                             |
-| SimpleAccount         | 0x9ad6228ca7382ab770c8bb25aa55c4fe503605bc | Balance: 100 ETH            |
+| SimpleAccount         | 0x1E684E8937774B00Ee2Ea562256f27a5c9D20d7c | Balance: 100 ETH            |
 | PasskeyAccountFactory | 0xBC9129Dc0487fc2E169941C75aABC539f208fb01 |                             |
 | PasskeyAccount        | **_Depends on PASSKEY env variables_**     | Balance: 100 ETH            |
 | VerifyingPaymaster    | 0xF6168876932289D073567f347121A267095f3DD6 | EntryPoint deposit: 100 ETH |
 
-> If you use default passkey, the PasskeyAccount address would be `0x054dab9bd2bc70133aa58ae953967ec4765eee4f`.
+> If you use default passkey, the PasskeyAccount address would be `0xF4bb6e38fC8A5ec977D4Fdc74B4E0fa84c8dc704`.
 
 These contracts are mainly owned by `0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266`. For easier management, deployer 1 (`0x70997970C51812dc3A010C7d01b50e0d17dc79C8`) handles Counter and non-account abstraction contracts. Deployer 2 (`0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC`) handles account abstraction v0.6.0 contracts. Deployer 3 (`0x90F79bf6EB2c4f870365E785982E1f101E93b906`) handles account abstraction v0.7.0 contracts. Owner and deployers are the first four addresses from the mnemonic `test test test test test test test test test test test junk`, and the first address has unlimited balance of ether.
 
