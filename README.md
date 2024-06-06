@@ -32,13 +32,13 @@ make testnet-up
 
 This testnet has following pre-deployed contracts:
 
-- Deployer 1: Non-account abstraction contracts
+#### Periphery contracts
 
 | Contract | Address                                    |
 | -------- | ------------------------------------------ |
 | Counter  | 0x8464135c8F25Da09e49BC8782676a84730C318bC |
 
-- Deployer 2: Account abstraction v0.6.0 contracts
+#### Account abstraction v0.6.0 contracts
 
 | Contract              | Address                                    | Note                        |
 | --------------------- | ------------------------------------------ | --------------------------- |
@@ -51,9 +51,12 @@ This testnet has following pre-deployed contracts:
 
 > If you use default passkey, the PasskeyAccount address would be `0xF4bb6e38fC8A5ec977D4Fdc74B4E0fa84c8dc704`.
 
-These contracts are mainly owned by `0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266`. For easier management, deployer 1 (`0x70997970C51812dc3A010C7d01b50e0d17dc79C8`) handles Counter and non-account abstraction contracts. Deployer 2 (`0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC`) handles account abstraction v0.6.0 contracts. Deployer 3 (`0x90F79bf6EB2c4f870365E785982E1f101E93b906`) handles account abstraction v0.7.0 contracts. Owner and deployers are the first four addresses from the mnemonic `test test test test test test test test test test test junk`, and the first address has unlimited balance of ether.
+> [!NOTE]
+> These contracts are mainly owned by `0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266`.
 
-> Please make sure the contracts in the submodules(`lib`) are added into `src/artifacts/0.6/Artifacts.sol` or `src/artifacts/0.6/Artifacts.sol` for being compiled.
+For management purpose, we use deployer 1 (`0x70997970C51812dc3A010C7d01b50e0d17dc79C8`) to deploy [periphery contracts](#periphery-contracts). Deployer 2 (`0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC`) deploys [account abstraction v0.6.0 contracts](#account-abstraction-v060-contracts). Deployer 3 (`0x90F79bf6EB2c4f870365E785982E1f101E93b906`) deploys [account abstraction v0.7.0 contracts](#account-abstraction-v070-contracts). Contract owner and deployers are derived from the first four addresses of the mnemonic `test test test test test test test test test test test junk`, and the owner (`0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266`) has unlimited balance of ether.
+
+> Please make sure the contracts in the submodules(`lib`) are added into `src/artifacts/{0.6,0.7}/Artifacts.sol` for being compiled.
 
 Clean resources for testnet:
 
