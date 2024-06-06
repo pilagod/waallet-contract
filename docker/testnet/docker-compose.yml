@@ -52,14 +52,14 @@ services:
       - "8080:8080"
     depends_on:
       - geth
-      - geth_setup 
+      - geth_setup
     environment:
       - RUST_LOG=debug
       - CHAIN_ID=1337
       - NODE_HTTP=http://geth:8545
       - BUILDER_MAX_BUNDLE_SIZE=1
       - BUILDER_PRIVATE_KEY=0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80
-      - ENTRY_POINTS=0x5FbDB2315678afecb367f032d93F642f64180aa3
+      - ENTRY_POINTS=0x663F3ad617193148711d28f5334eE4Ed07016602
       - MIN_STAKE_VALUE=0
       - MIN_UNSTAKE_DELAY=0
       - RPC_API=eth,debug,rundler
