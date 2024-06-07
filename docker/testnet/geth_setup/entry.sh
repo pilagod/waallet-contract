@@ -35,7 +35,6 @@ passkey_credential_id=${PASSKEY_CREDENTIAL_ID:-"9h5F3DgLSjSMdnVOadmhCw"}
 passkey_x=${PASSKEY_X:-67299174900712686363169673082376821529726602378544032702281553676098545184711}
 passkey_y=${PASSKEY_Y:-104273800132786176334597151467609377740095818152192999025225464410568038480397}
 
-
 ##############################
 # Deploy periphery contracts #
 ##############################
@@ -54,51 +53,81 @@ echo -e "\033[0;33m[Deploy account abstraction v0.6.0 contracts]\033[0m"
 
 entry_point_address_v0_6="0x663F3ad617193148711d28f5334eE4Ed07016602"
 simple_account_factory_address_v0_6="0x2E983A1Ba5e8b38AAAeC4B440B9dDcFBf72E15d1"
+simple_account_address_v0_6="0x1E684E8937774B00Ee2Ea562256f27a5c9D20d7c"
 passkey_account_factory_address_v0_6="0xBC9129Dc0487fc2E169941C75aABC539f208fb01"
 verifying_paymaster_address_v0_6="0xF6168876932289D073567f347121A267095f3DD6"
 
-# Deploy EntryPoint
-echo -e "\033[0;33m[Deploy EntryPoint]\033[0m"
+# Deploy EntryPoint v0.6
+echo -e "\033[0;33m[Deploy EntryPoint v0.6]\033[0m"
 forge create --rpc-url ${rpc_url} --private-key ${deployer_2_private_key} lib/account-abstraction/0.6/contracts/core/EntryPoint.sol:EntryPoint
 
-# Deploy SimpleAccountFactory
-echo -e "\033[0;33m[Deploy SimpleAccountFactory]\033[0m"
+# Deploy SimpleAccountFactory v0.6
+echo -e "\033[0;33m[Deploy SimpleAccountFactory v0.6]\033[0m"
 forge create --rpc-url ${rpc_url} --private-key ${deployer_2_private_key} lib/account-abstraction/0.6/contracts/samples/SimpleAccountFactory.sol:SimpleAccountFactory --constructor-args ${entry_point_address_v0_6}
 
-# Deploy SimpleAccount
-echo -e "\033[0;33m[Create SimpleAccount]\033[0m"
+# Deploy SimpleAccount v0.6
+echo -e "\033[0;33m[Create SimpleAccount v0.6]\033[0m"
 cast send --rpc-url ${rpc_url} --private-key ${deployer_2_private_key} ${simple_account_factory_address_v0_6} "createAccount(address owner,uint256 salt)" ${operator_address} 0
 
-# Get SimpleAccount address
-echo -e "\033[0;33m[Get SimpleAccount address]\033[0m"
-simple_account_address=$(cast call --rpc-url ${rpc_url} ${simple_account_factory_address_v0_6} "getAddress(address owner,uint256 salt)" ${operator_address} 0 | sed -r 's/^[.]*(0x)([0]{24}|)([0-9a-zA-Z]{40})[.]*$/\1\3/g')
-echo ${simple_account_address}
+# Get SimpleAccount v0.6 address
+echo -e "\033[0;33m[Get SimpleAccount v0.6 address]\033[0m"
+echo $(cast call --rpc-url ${rpc_url} ${simple_account_factory_address_v0_6} "getAddress(address owner,uint256 salt)" ${operator_address} 0 | sed -r 's/^[.]*(0x)([0]{24}|)([0-9a-zA-Z]{40})[.]*$/\1\3/g')
 
-# Topup SimpleAccount
-echo -e "\033[0;33m[Transfer 100 ETH to SimpleAccount]\033[0m"
-cast send --rpc-url ${rpc_url} --private-key ${operator_private_key} ${simple_account_address} --value 100ether
+# Topup SimpleAccount v0.6
+echo -e "\033[0;33m[Transfer 100 ETH to SimpleAccount v0.6]\033[0m"
+cast send --rpc-url ${rpc_url} --private-key ${operator_private_key} ${simple_account_address_v0_6} --value 100ether
 
-# Deploy PasskeyAccountFactory
-echo -e "\033[0;33m[Deploy PasskeyAccountFactory]\033[0m"
+# Deploy PasskeyAccountFactory v0.6
+echo -e "\033[0;33m[Deploy PasskeyAccountFactory v0.6]\033[0m"
 forge create --rpc-url ${rpc_url} --private-key ${deployer_2_private_key} src/account/0.6/PasskeyAccountFactory.sol:PasskeyAccountFactory --constructor-args ${entry_point_address_v0_6}
 
-# Deploy PasskeyAccount
-echo -e "\033[0;33m[Create PasskeyAccount]\033[0m"
+# Deploy PasskeyAccount v0.6
+echo -e "\033[0;33m[Create PasskeyAccount v0.6]\033[0m"
 cast send --rpc-url ${rpc_url} --private-key ${deployer_2_private_key} ${passkey_account_factory_address_v0_6} "createAccount(string calldata credId,uint256 pubKeyX,uint256 pubKeyY,uint256 salt)" ${passkey_credential_id} ${passkey_x} ${passkey_y} 0
 
-# Get PasskeyAccount address
-echo -e "\033[0;33m[Get PasskeyAccount address]\033[0m"
-passkey_account_address=$(cast call --rpc-url ${rpc_url} ${passkey_account_factory_address_v0_6} "getAddress(string calldata credId,uint256 pubKeyX,uint256 pubKeyY,uint256 salt)" ${passkey_credential_id} ${passkey_x} ${passkey_y} 0 | sed -r 's/^[.]*(0x)([0]{24}|)([0-9a-zA-Z]{40})[.]*$/\1\3/g')
-echo ${passkey_account_address}
+# Get PasskeyAccount v0.6 address
+echo -e "\033[0;33m[Get PasskeyAccount v0.6 address]\033[0m"
+passkey_account_address_v0_6=$(cast call --rpc-url ${rpc_url} ${passkey_account_factory_address_v0_6} "getAddress(string calldata credId,uint256 pubKeyX,uint256 pubKeyY,uint256 salt)" ${passkey_credential_id} ${passkey_x} ${passkey_y} 0 | sed -r 's/^[.]*(0x)([0]{24}|)([0-9a-zA-Z]{40})[.]*$/\1\3/g')
+echo ${passkey_account_address_v0_6}
 
-# Topup PasskeyAccount
-echo -e "\033[0;33m[Transfer 100 ETH to PasskeyAccount]\033[0m"
-cast send --rpc-url ${rpc_url} --private-key ${operator_private_key} ${passkey_account_address} --value 100ether
+# Topup PasskeyAccount v0.6
+echo -e "\033[0;33m[Transfer 100 ETH to PasskeyAccount v0.6]\033[0m"
+cast send --rpc-url ${rpc_url} --private-key ${operator_private_key} ${passkey_account_address_v0_6} --value 100ether
 
-# Deploy VerifyingPaymaster
-echo -e "\033[0;33m[Deploy VerifyingPaymaster]\033[0m"
+# Deploy VerifyingPaymaster v0.6
+echo -e "\033[0;33m[Deploy VerifyingPaymaster v0.6]\033[0m"
 forge create --rpc-url ${rpc_url} --private-key ${deployer_2_private_key} lib/account-abstraction/0.6/contracts/samples/VerifyingPaymaster.sol:VerifyingPaymaster --constructor-args ${entry_point_address_v0_6} ${operator_address}
 
-# Deposit to EntryPoint for VerifyingPaymaster
-echo -e "\033[0;33m[Deposit 100 ETH to EntryPoint for VerifyingPaymaster]\033[0m"
+# Deposit to EntryPoint for VerifyingPaymaster v0.6
+echo -e "\033[0;33m[Deposit 100 ETH to EntryPoint for VerifyingPaymaster v0.6]\033[0m"
 cast send --rpc-url ${rpc_url} --private-key ${operator_private_key} ${entry_point_address_v0_6} --value 100ether "depositTo(address account)" ${verifying_paymaster_address_v0_6}
+
+###############################################
+# Deploy account abstraction v0.7.0 contracts #
+###############################################
+
+echo -e "\033[0;33m[Deploy account abstraction v0.7.0 contracts]\033[0m"
+
+entry_point_address_v0_7="0x057ef64E23666F000b34aE31332854aCBd1c8544"
+simple_account_factory_address_v0_7="0x261D8c5e9742e6f7f1076Fa1F560894524e19cad"
+simple_account_address_v0_7="0xe569f1d8487239659C09b5cA1881320B5EbB0ab2"
+
+# Deploy EntryPoint v0.7
+echo -e "\033[0;33m[Deploy EntryPoint v0.7]\033[0m"
+forge create --rpc-url ${rpc_url} --private-key ${deployer_3_private_key} lib/account-abstraction/0.7/contracts/core/EntryPoint.sol:EntryPoint
+
+# Deploy SimpleAccountFactory v0.7
+echo -e "\033[0;33m[Deploy SimpleAccountFactory v0.7]\033[0m"
+forge create --rpc-url ${rpc_url} --private-key ${deployer_3_private_key} lib/account-abstraction/0.7/contracts/samples/SimpleAccountFactory.sol:SimpleAccountFactory --constructor-args ${entry_point_address_v0_7}
+
+# Deploy SimpleAccount v0.7
+echo -e "\033[0;33m[Create SimpleAccount v0.7]\033[0m"
+cast send --rpc-url ${rpc_url} --private-key ${deployer_3_private_key} ${simple_account_factory_address_v0_7} "createAccount(address owner,uint256 salt)" ${operator_address} 0
+
+# Get SimpleAccount v0.7 address
+echo -e "\033[0;33m[Get SimpleAccount v0.7 address]\033[0m"
+echo $(cast call --rpc-url ${rpc_url} ${simple_account_factory_address_v0_7} "getAddress(address owner,uint256 salt)" ${operator_address} 0 | sed -r 's/^[.]*(0x)([0]{24}|)([0-9a-zA-Z]{40})[.]*$/\1\3/g')
+
+# Topup SimpleAccount v0.7
+echo -e "\033[0;33m[Transfer 100 ETH to SimpleAccount v0.7]\033[0m"
+cast send --rpc-url ${rpc_url} --private-key ${operator_private_key} ${simple_account_address_v0_7} --value 100ether
