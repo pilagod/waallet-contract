@@ -49,6 +49,14 @@ This testnet has following pre-deployed contracts:
 | PasskeyAccount        | **_Depends on PASSKEY env variables_**     | Balance: 100 ETH            |
 | VerifyingPaymaster    | 0xF6168876932289D073567f347121A267095f3DD6 | EntryPoint deposit: 100 ETH |
 
+#### Account abstraction v0.7.0 contracts
+
+| Contract              | Address                                    | Note                        |
+| --------------------- | ------------------------------------------ | --------------------------- |
+| EntryPoint            | 0x057ef64E23666F000b34aE31332854aCBd1c8544 |                             |
+| SimpleAccountFactory  | 0x261D8c5e9742e6f7f1076Fa1F560894524e19cad |                             |
+| SimpleAccount         | 0xe569f1d8487239659C09b5cA1881320B5EbB0ab2 | Balance: 100 ETH            |
+
 > If you use default passkey, the PasskeyAccount address would be `0xF4bb6e38fC8A5ec977D4Fdc74B4E0fa84c8dc704`.
 
 > [!NOTE]
