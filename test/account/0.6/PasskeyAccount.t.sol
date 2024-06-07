@@ -4,14 +4,18 @@ pragma solidity ^0.8.13;
 
 import { Test } from "forge-std/Test.sol";
 import { console2 } from "forge-std/console2.sol";
-
-import { IEntryPoint } from "@aa/interfaces/IEntryPoint.sol";
+import { EntryPoint } from
+    "@account-abstraction/0.6/contracts/core/EntryPoint.sol";
+import { IEntryPoint } from
+    "@account-abstraction/0.6/contracts/interfaces/IEntryPoint.sol";
 import {
-    UserOperation, UserOperationLib
-} from "@aa/interfaces/UserOperation.sol";
+    UserOperation,
+    UserOperationLib
+} from "@account-abstraction/0.6/contracts/interfaces/UserOperation.sol";
 
-import { PasskeyAccount, Base64Url } from "src/account/PasskeyAccount.sol";
-import { PasskeyAccountFactory } from "src/account/PasskeyAccountFactory.sol";
+import { PasskeyAccount, Base64Url } from "src/account/0.6/PasskeyAccount.sol";
+import { PasskeyAccountFactory } from
+    "src/account/0.6/PasskeyAccountFactory.sol";
 
 contract PasskeyAccountTest is Test {
     using UserOperationLib for UserOperation;
@@ -29,10 +33,10 @@ contract PasskeyAccountTest is Test {
     PasskeyAccount public passkeyAccount;
 
     function setUp() public {
+        bytes memory entryPointCreationCode = type(EntryPoint).creationCode;
+
         // Align the entryPoint address with the one on the Gethnode and Mainnet
-        bytes memory entryPointBytecode =
-            vm.getCode("EntryPoint.sol:EntryPoint");
-        vm.etch(entryPointAddr, entryPointBytecode);
+        vm.etch(entryPointAddr, entryPointCreationCode);
         entryPoint = IEntryPoint(entryPointAddr);
 
         // Deploy the PasskeyAccountFactory and PasskeyAccount
@@ -41,7 +45,7 @@ contract PasskeyAccountTest is Test {
             passkeyAccountFactory.createAccount(credId, pubKeyX, pubKeyY, salt);
     }
 
-    function testWebauthnWithUserOp() public {
+    function testWebauthnWithUserOp() public view {
         console2.logAddress(address(passkeyAccount));
         UserOperation memory userOp = this.createUserOp();
         bytes32 userOpHash = getUserOpHash(userOp); // 0xe6bdbae2879ecdae390c002716048d2f26f2a46b18eb819e21ad82e54a9b9919
@@ -102,7 +106,6 @@ contract PasskeyAccountTest is Test {
     /**
      * Helpers
      */
-
     function createUserOp() public pure returns (UserOperation memory) {
         return UserOperation({
             sender: address(0),

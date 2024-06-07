@@ -16,3 +16,6 @@ vendor/
 # Dotenv file
 .env*
 !.env*.example
+
+# Misc
+.DS_Store

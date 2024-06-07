@@ -1,12 +1,14 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.13;
 
-import { Create2 } from "@openzeppelin/contracts/utils/Create2.sol";
+import { Create2 } from
+    "@openzeppelin-contracts/4.9/contracts/utils/Create2.sol";
 import { ERC1967Proxy } from
-    "@openzeppelin/contracts/proxy/ERC1967/ERC1967Proxy.sol";
-import { IEntryPoint } from "@aa/interfaces/IEntryPoint.sol";
+    "@openzeppelin-contracts/4.9/contracts/proxy/ERC1967/ERC1967Proxy.sol";
+import { IEntryPoint } from
+    "@account-abstraction/0.6/contracts/interfaces/IEntryPoint.sol";
 import { PasskeyAccount } from "./PasskeyAccount.sol";
-import { P256_VERIFIER_CREATION_CODE } from "../utils/P256Constants.sol";
+import { P256_VERIFIER_CREATION_CODE } from "./utils/P256Constants.sol";
 
 /* solhint-disable no-inline-assembly */
 
