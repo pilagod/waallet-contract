@@ -8,7 +8,8 @@ import { Create2 } from
 import { ERC1967Proxy } from
     "@openzeppelin-contracts/4.9/contracts/proxy/ERC1967/ERC1967Proxy.sol";
 
-import { P256_VERIFIER_CREATION_CODE } from "./util/P256Constants.sol";
+import { P256_VERIFIER_CREATION_CODE } from "src/util/P256Constants.sol";
+
 import { PasskeyAccount } from "./PasskeyAccount.sol";
 
 /* solhint-disable no-inline-assembly */

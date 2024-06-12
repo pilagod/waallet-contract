@@ -8,8 +8,8 @@ import {
 import { SimpleAccount } from
     "@account-abstraction/0.6/contracts/samples/SimpleAccount.sol";
 
-import { IPasskeyAccount, Passkey } from "../../interface/IPasskeyAccount.sol";
-import { Base64Url } from "./util/Base64Url.sol";
+import { IPasskeyAccount, Passkey } from "src/interface/IPasskeyAccount.sol";
+import { Base64Url } from "src/util/Base64Url.sol";
 
 contract PasskeyAccount is SimpleAccount, IPasskeyAccount {
     address public immutable p256Verifier;
