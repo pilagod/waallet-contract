@@ -1,16 +1,17 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.13;
 
-import { Base64Url } from "./utils/Base64Url.sol";
 import {
     IEntryPoint,
     PackedUserOperation
 } from "@account-abstraction/0.7/contracts/interfaces/IEntryPoint.sol";
-import { SIG_VALIDATION_FAILED } from
-    "@account-abstraction/0.7/contracts/core/Helpers.sol";
-import { IPasskeyAccount, Passkey } from "../../interfaces/IPasskeyAccount.sol";
 import { SimpleAccount } from
     "@account-abstraction/0.7/contracts/samples/SimpleAccount.sol";
+import { SIG_VALIDATION_FAILED } from
+    "@account-abstraction/0.7/contracts/core/Helpers.sol";
+
+import { IPasskeyAccount, Passkey } from "src/interface/IPasskeyAccount.sol";
+import { Base64Url } from "src/util/Base64Url.sol";
 
 contract PasskeyAccount is SimpleAccount, IPasskeyAccount {
     address public immutable p256Verifier;

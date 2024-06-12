@@ -13,9 +13,10 @@ import { PackedUserOperation } from
 import { UserOperationLib } from
     "@account-abstraction/0.7/contracts/core/UserOperationLib.sol";
 
-import { PasskeyAccount, Base64Url } from "src/account/0.7/PasskeyAccount.sol";
+import { PasskeyAccount } from "src/account/0.7/PasskeyAccount.sol";
 import { PasskeyAccountFactory } from
     "src/account/0.7/PasskeyAccountFactory.sol";
+import { Base64Url } from "src/util/Base64Url.sol";
 
 contract PasskeyAccountTest is Test {
     using UserOperationLib for PackedUserOperation;
