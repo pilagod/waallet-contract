@@ -50,12 +50,8 @@ contract PasskeyAccountTest is Test {
         console2.logAddress(address(passkeyAccount));
         PackedUserOperation memory userOp = this.createUserOp();
         bytes32 userOpHash = getUserOpHash(userOp); // 0x80b82c1ac799ee1724fcae5e3f80d22c5a92a868e3e4479148ad568db50fd6a1
-        console2.logBytes32(userOpHash);
         string memory userOpHashBaseUrl =
             Base64Url.encode(abi.encodePacked(userOpHash)); // gLgsGseZ7hck_K5eP4DSLFqSqGjj5EeRSK1WjbUP1qE
-        console2.logString(userOpHashBaseUrl);
-        console2.logString(userOpHashBaseUrl);
-        console2.logString(userOpHashBaseUrl);
         string memory clientDataJson = string.concat(
             '{"type":"webauthn.get","challenge":"',
             userOpHashBaseUrl,
@@ -70,7 +66,7 @@ contract PasskeyAccountTest is Test {
         uint256 sigR =
             43777763158794140938568405442257097307265824726437265921818183423749900982475;
         uint256 sigS =
-            33307018633662411339576384710157170944124495385049361320569752306379371449137;
+            82485070576693837423121062239250402585872459839086399021852506754689140595232;
 
         userOp.signature = abi.encode(
             false,
