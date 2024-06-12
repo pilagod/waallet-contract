@@ -41,9 +41,16 @@ passkey_y=${PASSKEY_Y:-104273800132786176334597151467609377740095818152192999025
 
 echo -e "\033[0;33m[Deploy periphery contracts]\033[0m"
 
+counter_address="0x8464135c8F25Da09e49BC8782676a84730C318bC"
+test_token_address="0x71C95911E9a5D330f4D621842EC243EE1343292e"
+
 # Deploy Counter
 echo -e "\033[0;33m[Deploy Counter]\033[0m"
 forge create --rpc-url ${rpc_url} --private-key ${deployer_1_private_key} src/Counter.sol:Counter
+
+# Deploy Test Token
+echo -e "\033[0;33m[Deploy Test Token]\033[0m"
+forge create --rpc-url ${rpc_url} --private-key ${deployer_1_private_key} src/token/ERC20Mintable.sol:ERC20Mintable --constructor-args "Test Token" "TEST"
 
 ###############################################
 # Deploy account abstraction v0.6.0 contracts #
@@ -77,6 +84,10 @@ echo $(cast call --rpc-url ${rpc_url} ${simple_account_factory_address_v0_6} "ge
 echo -e "\033[0;33m[Transfer 100 ETH to SimpleAccount v0.6]\033[0m"
 cast send --rpc-url ${rpc_url} --private-key ${operator_private_key} ${simple_account_address_v0_6} --value 100ether
 
+# Mint Test Token for SimpleAccount v0.6
+echo -e "\033[0;33m[Mint 100 Test Token for SimpleAccount v0.6]\033[0m"
+cast send --rpc-url ${rpc_url} --private-key ${operator_private_key} ${test_token_address} "mint(address to, uint256 value)" ${simple_account_address_v0_6} 100ether
+
 # Deploy PasskeyAccountFactory v0.6
 echo -e "\033[0;33m[Deploy PasskeyAccountFactory v0.6]\033[0m"
 forge create --rpc-url ${rpc_url} --private-key ${deployer_2_private_key} src/account/0.6/PasskeyAccountFactory.sol:PasskeyAccountFactory --constructor-args ${entry_point_address_v0_6}
@@ -93,6 +104,10 @@ echo ${passkey_account_address_v0_6}
 # Topup PasskeyAccount v0.6
 echo -e "\033[0;33m[Transfer 100 ETH to PasskeyAccount v0.6]\033[0m"
 cast send --rpc-url ${rpc_url} --private-key ${operator_private_key} ${passkey_account_address_v0_6} --value 100ether
+
+# Mint Test Token for PasskeyAccount v0.6
+echo -e "\033[0;33m[Mint 100 Test Token for PasskeyAccount v0.6]\033[0m"
+cast send --rpc-url ${rpc_url} --private-key ${operator_private_key} ${test_token_address} "mint(address to, uint256 value)" ${passkey_account_address_v0_6} 100ether
 
 # Deploy VerifyingPaymaster v0.6
 echo -e "\033[0;33m[Deploy VerifyingPaymaster v0.6]\033[0m"
@@ -131,3 +146,7 @@ echo $(cast call --rpc-url ${rpc_url} ${simple_account_factory_address_v0_7} "ge
 # Topup SimpleAccount v0.7
 echo -e "\033[0;33m[Transfer 100 ETH to SimpleAccount v0.7]\033[0m"
 cast send --rpc-url ${rpc_url} --private-key ${operator_private_key} ${simple_account_address_v0_7} --value 100ether
+
+# Mint Test Token for SimpleAccount v0.7
+echo -e "\033[0;33m[Mint 100 Test Token for SimpleAccount v0.7]\033[0m"
+cast send --rpc-url ${rpc_url} --private-key ${operator_private_key} ${test_token_address} "mint(address to, uint256 value)" ${simple_account_address_v0_7} 100ether
