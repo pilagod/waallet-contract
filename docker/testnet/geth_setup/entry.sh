@@ -126,6 +126,7 @@ echo -e "\033[0;33m[Deploy account abstraction v0.7.0 contracts]\033[0m"
 entry_point_address_v0_7="0x057ef64E23666F000b34aE31332854aCBd1c8544"
 simple_account_factory_address_v0_7="0x261D8c5e9742e6f7f1076Fa1F560894524e19cad"
 simple_account_address_v0_7="0xe569f1d8487239659C09b5cA1881320B5EbB0ab2"
+passkey_account_factory_address_v0_7="0xCba6b9A951749B8735C603e7fFC5151849248772"
 
 # Deploy EntryPoint v0.7
 echo -e "\033[0;33m[Deploy EntryPoint v0.7]\033[0m"
@@ -150,3 +151,24 @@ cast send --rpc-url ${rpc_url} --private-key ${operator_private_key} ${simple_ac
 # Mint Test Token for SimpleAccount v0.7
 echo -e "\033[0;33m[Mint 100 Test Token for SimpleAccount v0.7]\033[0m"
 cast send --rpc-url ${rpc_url} --private-key ${operator_private_key} ${test_token_address} "mint(address to, uint256 value)" ${simple_account_address_v0_7} 100ether
+
+# Deploy PasskeyAccountFactory v0.7
+echo -e "\033[0;33m[Deploy PasskeyAccountFactory v0.7]\033[0m"
+forge create --rpc-url ${rpc_url} --private-key ${deployer_3_private_key} src/account/0.7/PasskeyAccountFactory.sol:PasskeyAccountFactory --constructor-args ${entry_point_address_v0_7}
+
+# Deploy PasskeyAccount v0.7
+echo -e "\033[0;33m[Create PasskeyAccount v0.7]\033[0m"
+cast send --rpc-url ${rpc_url} --private-key ${deployer_3_private_key} ${passkey_account_factory_address_v0_7} "createAccount(string calldata credId,uint256 pubKeyX,uint256 pubKeyY,uint256 salt)" ${passkey_credential_id} ${passkey_x} ${passkey_y} 0
+
+# Get PasskeyAccount v0.7 address
+echo -e "\033[0;33m[Get PasskeyAccount v0.7 address]\033[0m"
+passkey_account_address_v0_7=$(cast call --rpc-url ${rpc_url} ${passkey_account_factory_address_v0_7} "getAddress(string calldata credId,uint256 pubKeyX,uint256 pubKeyY,uint256 salt)" ${passkey_credential_id} ${passkey_x} ${passkey_y} 0 | sed -r 's/^[.]*(0x)([0]{24}|)([0-9a-zA-Z]{40})[.]*$/\1\3/g')
+echo ${passkey_account_address_v0_7}
+
+# Topup PasskeyAccount v0.7
+echo -e "\033[0;33m[Transfer 100 ETH to PasskeyAccount v0.7]\033[0m"
+cast send --rpc-url ${rpc_url} --private-key ${operator_private_key} ${passkey_account_address_v0_7} --value 100ether
+
+# Mint Test Token for PasskeyAccount v0.7
+echo -e "\033[0;33m[Mint 100 Test Token for PasskeyAccount v0.7]\033[0m"
+cast send --rpc-url ${rpc_url} --private-key ${operator_private_key} ${test_token_address} "mint(address to, uint256 value)" ${passkey_account_address_v0_7} 100ether
