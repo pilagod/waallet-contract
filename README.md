@@ -34,9 +34,10 @@ This testnet has following pre-deployed contracts:
 
 #### Periphery contracts
 
-| Contract | Address                                    |
-| -------- | ------------------------------------------ |
-| Counter  | 0x8464135c8F25Da09e49BC8782676a84730C318bC |
+| Contract   | Address                                    |
+| ---------- | ------------------------------------------ |
+| Counter    | 0x8464135c8F25Da09e49BC8782676a84730C318bC |
+| Test Token | 0x71C95911E9a5D330f4D621842EC243EE1343292e |
 
 #### Account abstraction v0.6.0 contracts
 
@@ -44,10 +45,18 @@ This testnet has following pre-deployed contracts:
 | --------------------- | ------------------------------------------ | --------------------------- |
 | EntryPoint            | 0x663F3ad617193148711d28f5334eE4Ed07016602 |                             |
 | SimpleAccountFactory  | 0x2E983A1Ba5e8b38AAAeC4B440B9dDcFBf72E15d1 |                             |
-| SimpleAccount         | 0x1E684E8937774B00Ee2Ea562256f27a5c9D20d7c | Balance: 100 ETH            |
+| SimpleAccount         | 0x1E684E8937774B00Ee2Ea562256f27a5c9D20d7c | Balance: 100 ETH, 100 TEST  |
 | PasskeyAccountFactory | 0xBC9129Dc0487fc2E169941C75aABC539f208fb01 |                             |
-| PasskeyAccount        | **_Depends on PASSKEY env variables_**     | Balance: 100 ETH            |
+| PasskeyAccount        | **_Depends on PASSKEY env variables_**     | Balance: 100 ETH, 100 TEST  |
 | VerifyingPaymaster    | 0xF6168876932289D073567f347121A267095f3DD6 | EntryPoint deposit: 100 ETH |
+
+#### Account abstraction v0.7.0 contracts
+
+| Contract              | Address                                    | Note                        |
+| --------------------- | ------------------------------------------ | --------------------------- |
+| EntryPoint            | 0x057ef64E23666F000b34aE31332854aCBd1c8544 |                             |
+| SimpleAccountFactory  | 0x261D8c5e9742e6f7f1076Fa1F560894524e19cad |                             |
+| SimpleAccount         | 0xe569f1d8487239659C09b5cA1881320B5EbB0ab2 | Balance: 100 ETH, 100 TEST  |
 
 > If you use default passkey, the PasskeyAccount address would be `0xF4bb6e38fC8A5ec977D4Fdc74B4E0fa84c8dc704`.
 
