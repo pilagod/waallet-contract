@@ -84,7 +84,7 @@ library WebAuthnSignatureVerifier {
         // Check that authenticatorData has good flags
         if (
             signatureData.authenticatorData.length < 37
-                || !_checkAuthFlags(
+                || !checkAuthFlags(
                     signatureData.authenticatorData[32],
                     signatureData.requireUserVerification
                 )
@@ -166,7 +166,7 @@ library WebAuthnSignatureVerifier {
     /// Verifies the authFlags in authenticatorData. Numbers in inline comment
     /// correspond to the same numbered bullets in
     /// https://www.w3.org/TR/webauthn-2/#sctn-verifying-assertion.
-    function _checkAuthFlags(
+    function checkAuthFlags(
         bytes1 flags,
         bool requireUserVerification
     ) internal pure returns (bool) {
