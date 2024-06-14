@@ -4,6 +4,7 @@ pragma solidity ^0.8.13;
 
 import { Test } from "forge-std/Test.sol";
 import { console2 } from "forge-std/console2.sol";
+
 import { EntryPoint } from
     "@account-abstraction/0.6/contracts/core/EntryPoint.sol";
 import { IEntryPoint } from
@@ -23,6 +24,10 @@ import { Base64Url } from "src/util/Base64Url.sol";
 
 contract PasskeyAccountTest is Test {
     using UserOperationLib for UserOperation;
+
+    // Secp256r1 curve order
+    uint256 constant P256_N =
+        0xFFFFFFFF00000000FFFFFFFFFFFFFFFFBCE6FAADA7179E84F3B9CAC2FC632551;
 
     address constant entryPointAddr = 0x5FbDB2315678afecb367f032d93F642f64180aa3;
     string constant credId = "9h5F3DgLSjSMdnVOadmhCw";
@@ -50,7 +55,6 @@ contract PasskeyAccountTest is Test {
     }
 
     function testWebauthnWithUserOp() public view {
-        console2.logAddress(address(passkeyAccount));
         UserOperation memory userOp = this.createUserOp();
         bytes32 userOpHash = getUserOpHash(userOp);
         string memory userOpHashBaseUrl = Base64Url.encode(
@@ -61,9 +65,6 @@ contract PasskeyAccountTest is Test {
             userOpHashBaseUrl,
             '","origin":"https://webauthn.passwordless.id","crossOrigin":false}'
         );
-        console2.logBytes32(userOpHash);
-        console2.logString(userOpHashBaseUrl);
-        console2.logBytes(bytes(clientDataJson));
 
         bytes memory authenticatorData =
             hex"4fb20856f24a6ae7dafc2781090ac8477ae6e2bd072660236cc614c6fb7c2ea01d00000000";
@@ -71,6 +72,15 @@ contract PasskeyAccountTest is Test {
             38724109948561436095576077243032190621845383779944965127969356788038003839143;
         uint256 sigS =
             76418446211974146173072857078323968075884095252188304117596341969150001009713;
+
+        console2.logString("+ userOpHashBaseUrl:");
+        console2.logString(userOpHashBaseUrl);
+        console2.logString("+ clientDataJsonBaseUrl:");
+        console2.logString(clientDataJson);
+        console2.logString("+ signatureS:");
+        console2.logUint(sigS);
+        console2.logString("+ signatureSMalleability:");
+        console2.logUint(P256_N - sigS);
 
         userOp.signature = abi.encode(
             false,
@@ -85,14 +95,10 @@ contract PasskeyAccountTest is Test {
         // Validate signature failed
         assertEq(passkeyAccount.validateSignature(userOp, userOpHash), 1);
 
-        // Secp256r1 curve order
-        uint256 n =
-            0xFFFFFFFF00000000FFFFFFFFFFFFFFFFBCE6FAADA7179E84F3B9CAC2FC632551;
         // For malleable signatures, like upper-range s-values, calculate a new s-value.
-        if (sigS > n / 2) {
-            sigS = n - sigS;
+        if (sigS > P256_N / 2) {
+            sigS = P256_N - sigS;
         }
-        console2.logUint(sigS);
 
         userOp.signature = abi.encode(
             false,
