@@ -13,6 +13,9 @@ import {
     UserOperationLib
 } from "@account-abstraction/0.6/contracts/interfaces/UserOperation.sol";
 
+import { ECDSA } from
+    "@openzeppelin-contracts/4.9/contracts/utils/cryptography/ECDSA.sol";
+
 import { PasskeyAccount } from "src/account/0.6/PasskeyAccount.sol";
 import { PasskeyAccountFactory } from
     "src/account/0.6/PasskeyAccountFactory.sol";
@@ -49,9 +52,10 @@ contract PasskeyAccountTest is Test {
     function testWebauthnWithUserOp() public view {
         console2.logAddress(address(passkeyAccount));
         UserOperation memory userOp = this.createUserOp();
-        bytes32 userOpHash = getUserOpHash(userOp); // 0xe6bdbae2879ecdae390c002716048d2f26f2a46b18eb819e21ad82e54a9b9919
-        string memory userOpHashBaseUrl =
-            Base64Url.encode(abi.encodePacked(userOpHash)); // 5r264oeeza45DAAnFgSNLybypGsY64GeIa2C5UqbmRk
+        bytes32 userOpHash = getUserOpHash(userOp);
+        string memory userOpHashBaseUrl = Base64Url.encode(
+            abi.encodePacked(ECDSA.toEthSignedMessageHash(userOpHash))
+        ); // YGHW12yxLom580l3ybtTZF8a8NDl2LgdPmX1B_y2eno
         string memory clientDataJson = string.concat(
             '{"type":"webauthn.get","challenge":"',
             userOpHashBaseUrl,
@@ -62,11 +66,11 @@ contract PasskeyAccountTest is Test {
         console2.logBytes(bytes(clientDataJson));
 
         bytes memory authenticatorData =
-            hex"4fb20856f24a6ae7dafc2781090ac8477ae6e2bd072660236cc614c6fb7c2ea00500000001";
+            hex"4fb20856f24a6ae7dafc2781090ac8477ae6e2bd072660236cc614c6fb7c2ea01d00000000";
         uint256 sigR =
-            79989742396362963594147811038759420161389526291519568381973513208052666825670;
+            38724109948561436095576077243032190621845383779944965127969356788038003839143;
         uint256 sigS =
-            60564441634584281332486487842777985011692936482102942812772457824444148629022;
+            76418446211974146173072857078323968075884095252188304117596341969150001009713;
 
         userOp.signature = abi.encode(
             false,

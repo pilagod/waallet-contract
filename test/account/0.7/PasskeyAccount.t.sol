@@ -13,6 +13,9 @@ import { PackedUserOperation } from
 import { UserOperationLib } from
     "@account-abstraction/0.7/contracts/core/UserOperationLib.sol";
 
+import { MessageHashUtils } from
+    "@openzeppelin-contracts/5.0/contracts/utils/cryptography/MessageHashUtils.sol";
+
 import { PasskeyAccount } from "src/account/0.7/PasskeyAccount.sol";
 import { PasskeyAccountFactory } from
     "src/account/0.7/PasskeyAccountFactory.sol";
@@ -49,9 +52,12 @@ contract PasskeyAccountTest is Test {
     function testWebauthnWithUserOp() public view {
         console2.logAddress(address(passkeyAccount));
         PackedUserOperation memory userOp = this.createUserOp();
-        bytes32 userOpHash = getUserOpHash(userOp); // 0x80b82c1ac799ee1724fcae5e3f80d22c5a92a868e3e4479148ad568db50fd6a1
-        string memory userOpHashBaseUrl =
-            Base64Url.encode(abi.encodePacked(userOpHash)); // gLgsGseZ7hck_K5eP4DSLFqSqGjj5EeRSK1WjbUP1qE
+        bytes32 userOpHash = getUserOpHash(userOp);
+        string memory userOpHashBaseUrl = Base64Url.encode(
+            abi.encodePacked(
+                MessageHashUtils.toEthSignedMessageHash(userOpHash)
+            )
+        ); // iUPS8398hjW_UC_664eUIQpOBpxDft4ylVeOw6KrsNo
         string memory clientDataJson = string.concat(
             '{"type":"webauthn.get","challenge":"',
             userOpHashBaseUrl,
@@ -64,9 +70,9 @@ contract PasskeyAccountTest is Test {
         bytes memory authenticatorData =
             hex"4fb20856f24a6ae7dafc2781090ac8477ae6e2bd072660236cc614c6fb7c2ea01d00000000";
         uint256 sigR =
-            43777763158794140938568405442257097307265824726437265921818183423749900982475;
+            22530117909909222177348279977295449888465600700585185654369919411731740735243;
         uint256 sigS =
-            82485070576693837423121062239250402585872459839086399021852506754689140595232;
+            103009902750221625775814724886334916574035587383011463777263635781677061484214;
 
         userOp.signature = abi.encode(
             false,
