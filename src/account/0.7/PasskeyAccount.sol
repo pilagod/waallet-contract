@@ -13,10 +13,13 @@ import { SIG_VALIDATION_FAILED } from
 import { IPasskeyAccount, Passkey } from "src/interface/IPasskeyAccount.sol";
 import { Base64Url } from "src/util/Base64Url.sol";
 import { WebAuthnSignatureVerifier } from
-    "src/util/WebAuthnSignatureVerifier.sol";
+    "src/core/WebAuthnSignatureVerifier.sol";
 
-contract PasskeyAccount is SimpleAccount, IPasskeyAccount {
-    address public immutable p256Verifier;
+contract PasskeyAccount is
+    SimpleAccount,
+    IPasskeyAccount,
+    WebAuthnSignatureVerifier
+{
     Passkey public passkey;
 
     // The constructor is used only for the "implementation" and only sets immutable values.
@@ -24,9 +27,7 @@ contract PasskeyAccount is SimpleAccount, IPasskeyAccount {
     constructor(
         IEntryPoint _entryPoint,
         address _p256Verifier
-    ) SimpleAccount(_entryPoint) {
-        p256Verifier = _p256Verifier;
-    }
+    ) SimpleAccount(_entryPoint) WebAuthnSignatureVerifier(_p256Verifier) { }
 
     /**
      * The initializer for the PassKeysAcount instance.
@@ -43,20 +44,23 @@ contract PasskeyAccount is SimpleAccount, IPasskeyAccount {
         _initPasskey(credId, pubKeyX, pubKeyY);
     }
 
+    // TODO: Assign Passkey with credId.
+    function isPasskeyValid(Passkey memory _passkey)
+        public
+        pure
+        returns (bool)
+    {
+        return _passkey.pubKeyX != 0 && _passkey.pubKeyY != 0;
+    }
+
     function updatePasskey(Passkey calldata _passkey)
         external
         virtual
         override
     {
         require(msg.sender == address(this), "Only wallet can update passkeys");
-        require(
-            WebAuthnSignatureVerifier.isPasskeyValid(_passkey),
-            "Zero passkey is not allowed"
-        );
-        require(
-            WebAuthnSignatureVerifier.isPasskeyValid(passkey),
-            "Passkey doesn't exist"
-        );
+        require(isPasskeyValid(_passkey), "Zero passkey is not allowed");
+        require(isPasskeyValid(passkey), "Passkey doesn't exist");
         passkey.credId = _passkey.credId;
         passkey.pubKeyX = _passkey.pubKeyX;
         passkey.pubKeyY = _passkey.pubKeyY;
@@ -75,10 +79,7 @@ contract PasskeyAccount is SimpleAccount, IPasskeyAccount {
         uint256 pubKeyX,
         uint256 pubKeyY
     ) internal {
-        require(
-            !WebAuthnSignatureVerifier.isPasskeyValid(passkey),
-            "Passkey already exists"
-        );
+        require(!isPasskeyValid(passkey), "Passkey already exists");
         passkey.credId = credId;
         passkey.pubKeyX = pubKeyX;
         passkey.pubKeyY = pubKeyY;
@@ -94,10 +95,7 @@ contract PasskeyAccount is SimpleAccount, IPasskeyAccount {
         PackedUserOperation calldata userOp,
         bytes32 userOpHash // As Webauthn's challenge
     ) internal view virtual override returns (uint256) {
-        require(
-            WebAuthnSignatureVerifier.isPasskeyValid(passkey),
-            "Passkey doesn't exist"
-        );
+        require(isPasskeyValid(passkey), "Passkey doesn't exist");
         (
             bool isSimulation,
             bytes memory authenticatorData,
@@ -115,9 +113,8 @@ contract PasskeyAccount is SimpleAccount, IPasskeyAccount {
         bytes memory challenge =
             isSimulation ? bytes("") : abi.encodePacked(userOpHash);
 
-        bool isSigValid = WebAuthnSignatureVerifier.verifySignatureWebauthn(
-            p256Verifier,
-            WebAuthnSignatureVerifier.SignatureData({
+        bool isSigValid = verifySignatureWebauthn(
+            SignatureData({
                 challenge: challenge,
                 authenticatorData: authenticatorData,
                 requireUserVerification: requireUserVerification,
