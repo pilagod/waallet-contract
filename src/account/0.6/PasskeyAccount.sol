@@ -112,20 +112,18 @@ contract PasskeyAccount is
         bytes memory challenge =
             isSimulation ? bytes("") : abi.encodePacked(userOpHash);
 
-        bool isSigValid = verifySignatureWebauthn(
-            SignatureData({
-                challenge: challenge,
-                authenticatorData: authenticatorData,
-                requireUserVerification: requireUserVerification,
-                clientDataJSON: clientDataJSON,
-                challengeLocation: challengeLocation,
-                responseTypeLocation: responseTypeLocation,
-                r: r,
-                s: s,
-                x: passkey.pubKeyX,
-                y: passkey.pubKeyY
-            })
-        );
+        bool isSigValid = verifySignatureWebauthn({
+            challenge: challenge,
+            authenticatorData: authenticatorData,
+            requireUserVerification: requireUserVerification,
+            clientDataJSON: clientDataJSON,
+            challengeLocation: challengeLocation,
+            responseTypeLocation: responseTypeLocation,
+            r: r,
+            s: s,
+            x: passkey.pubKeyX,
+            y: passkey.pubKeyY
+        });
 
         if (isSimulation) {
             return SIG_VALIDATION_FAILED;

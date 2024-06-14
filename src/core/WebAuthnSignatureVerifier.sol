@@ -15,20 +15,6 @@ abstract contract WebAuthnSignatureVerifier {
     bytes1 private constant _AUTH_DATA_FLAGS_BE = 0x08; // Bit 3
     bytes1 private constant _AUTH_DATA_FLAGS_BS = 0x10; // Bit 4
 
-    // Using a struct to avoid stack too deep errors
-    struct SignatureData {
-        bytes challenge;
-        bytes authenticatorData;
-        bool requireUserVerification;
-        string clientDataJSON;
-        uint256 challengeLocation;
-        uint256 responseTypeLocation;
-        uint256 r;
-        uint256 s;
-        uint256 x;
-        uint256 y;
-    }
-
     constructor(address _p256Verifier) {
         p256Verifier = _p256Verifier;
     }
@@ -69,65 +55,47 @@ abstract contract WebAuthnSignatureVerifier {
      * verify all the steps as described in the specification, only ones relevant
      * to our context. Please carefully read through this list before usage.
      */
-    function verifySignatureWebauthn(SignatureData memory signatureData)
-        public
-        view
-        returns (bool)
-    {
+    function verifySignatureWebauthn(
+        bytes memory challenge,
+        bytes memory authenticatorData,
+        bool requireUserVerification,
+        string memory clientDataJSON,
+        uint256 challengeLocation,
+        uint256 responseTypeLocation,
+        uint256 r,
+        uint256 s,
+        uint256 x,
+        uint256 y
+    ) public view returns (bool) {
         // Check that authenticatorData has good flags
         if (
-            signatureData.authenticatorData.length < 37
-                || !_checkAuthFlags(
-                    signatureData.authenticatorData[32],
-                    signatureData.requireUserVerification
-                )
+            authenticatorData.length < 37
+                || !_checkAuthFlags(authenticatorData[32], requireUserVerification)
         ) {
             return false;
         }
 
         // Check that response is for an authentication assertion
         string memory responseType = '"type":"webauthn.get"';
-        if (
-            !_contains(
-                responseType,
-                signatureData.clientDataJSON,
-                signatureData.responseTypeLocation
-            )
-        ) {
+        if (!_contains(responseType, clientDataJSON, responseTypeLocation)) {
             return false;
         }
 
         // Check that challenge is in the clientDataJSON
-        string memory challengeB64url =
-            Base64Url.encode(signatureData.challenge);
+        string memory challengeB64url = Base64Url.encode(challenge);
         string memory challengeProperty =
             string.concat('"challenge":"', challengeB64url, '"');
 
-        if (
-            !_contains(
-                challengeProperty,
-                signatureData.clientDataJSON,
-                signatureData.challengeLocation
-            )
-        ) {
+        if (!_contains(challengeProperty, clientDataJSON, challengeLocation)) {
             return false;
         }
 
         // Check that the public key signed sha256(authenticatorData || sha256(clientDataJSON))
-        bytes32 clientDataJSONHash = sha256(bytes(signatureData.clientDataJSON));
-        bytes32 messageHash = sha256(
-            abi.encodePacked(
-                signatureData.authenticatorData, clientDataJSONHash
-            )
-        );
+        bytes32 clientDataJSONHash = sha256(bytes(clientDataJSON));
+        bytes32 messageHash =
+            sha256(abi.encodePacked(authenticatorData, clientDataJSONHash));
 
-        return verifySignature(
-            messageHash,
-            signatureData.r,
-            signatureData.s,
-            signatureData.x,
-            signatureData.y
-        );
+        return verifySignature(messageHash, r, s, x, y);
     }
 
     /// Checks whether substr occurs in str starting at a given byte offset.
