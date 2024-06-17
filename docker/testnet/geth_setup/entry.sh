@@ -127,6 +127,7 @@ entry_point_address_v0_7="0x057ef64E23666F000b34aE31332854aCBd1c8544"
 simple_account_factory_address_v0_7="0x261D8c5e9742e6f7f1076Fa1F560894524e19cad"
 simple_account_address_v0_7="0xe569f1d8487239659C09b5cA1881320B5EbB0ab2"
 passkey_account_factory_address_v0_7="0xCba6b9A951749B8735C603e7fFC5151849248772"
+verifying_paymaster_address_v0_7="0xcf27F781841484d5CF7e155b44954D7224caF1dD"
 
 # Deploy EntryPoint v0.7
 echo -e "\033[0;33m[Deploy EntryPoint v0.7]\033[0m"
@@ -172,3 +173,11 @@ cast send --rpc-url ${rpc_url} --private-key ${operator_private_key} ${passkey_a
 # Mint Test Token for PasskeyAccount v0.7
 echo -e "\033[0;33m[Mint 100 Test Token for PasskeyAccount v0.7]\033[0m"
 cast send --rpc-url ${rpc_url} --private-key ${operator_private_key} ${test_token_address} "mint(address to, uint256 value)" ${passkey_account_address_v0_7} 100ether
+
+# Deploy VerifyingPaymaster v0.7
+echo -e "\033[0;33m[Deploy VerifyingPaymaster v0.7]\033[0m"
+forge create --rpc-url ${rpc_url} --private-key ${deployer_3_private_key} lib/account-abstraction/0.7/contracts/samples/VerifyingPaymaster.sol:VerifyingPaymaster --constructor-args ${entry_point_address_v0_7} ${operator_address}
+
+# Deposit to EntryPoint for VerifyingPaymaster v0.7
+echo -e "\033[0;33m[Deposit 100 ETH to EntryPoint for VerifyingPaymaster v0.7]\033[0m"
+cast send --rpc-url ${rpc_url} --private-key ${operator_private_key} ${entry_point_address_v0_7} --value 100ether "depositTo(address account)" ${verifying_paymaster_address_v0_7}
