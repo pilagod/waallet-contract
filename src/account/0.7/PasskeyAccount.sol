@@ -3,10 +3,12 @@ pragma solidity ^0.8.13;
 
 import {
     IEntryPoint,
-    UserOperation
-} from "@account-abstraction/0.6/contracts/interfaces/IEntryPoint.sol";
+    PackedUserOperation
+} from "@account-abstraction/0.7/contracts/interfaces/IEntryPoint.sol";
 import { SimpleAccount } from
-    "@account-abstraction/0.6/contracts/samples/SimpleAccount.sol";
+    "@account-abstraction/0.7/contracts/samples/SimpleAccount.sol";
+import { SIG_VALIDATION_FAILED } from
+    "@account-abstraction/0.7/contracts/core/Helpers.sol";
 
 import { IPasskeyAccount, Passkey } from "src/interface/IPasskeyAccount.sol";
 import { Base64Url } from "src/util/Base64Url.sol";
@@ -66,7 +68,7 @@ contract PasskeyAccount is
     }
 
     function validateSignature(
-        UserOperation calldata userOp,
+        PackedUserOperation calldata userOp,
         bytes32 userOpHash // As Webauthn's challenge
     ) external view returns (uint256) {
         return _validateSignature(userOp, userOpHash);
@@ -85,16 +87,15 @@ contract PasskeyAccount is
     }
 
     /**
-     * @param userOp typical userOperation
+     * @param userOp typical PackedUserOperation
      * @param userOpHash the hash of the user operation.
      * @return validationData
      */
     function _validateSignature(
-        UserOperation calldata userOp,
+        PackedUserOperation calldata userOp,
         bytes32 userOpHash // As Webauthn's challenge
     ) internal view virtual override returns (uint256) {
         require(isPasskeyValid(passkey), "Passkey doesn't exist");
-
         (
             bool isSimulation,
             bytes memory authenticatorData,
@@ -124,7 +125,6 @@ contract PasskeyAccount is
             x: passkey.pubKeyX,
             y: passkey.pubKeyY
         });
-
         if (isSimulation) {
             return SIG_VALIDATION_FAILED;
         }
