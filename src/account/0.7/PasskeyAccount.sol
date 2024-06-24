@@ -10,6 +10,9 @@ import { SimpleAccount } from
 import { SIG_VALIDATION_FAILED } from
     "@account-abstraction/0.7/contracts/core/Helpers.sol";
 
+import { MessageHashUtils } from
+    "@openzeppelin-contracts/5.0/contracts/utils/cryptography/MessageHashUtils.sol";
+
 import { IPasskeyAccount, Passkey } from "src/interface/IPasskeyAccount.sol";
 import { Base64Url } from "src/util/Base64Url.sol";
 import { WebAuthnSignatureVerifier } from
@@ -110,8 +113,9 @@ contract PasskeyAccount is
             (bool, bytes, bool, string, uint256, uint256, uint256, uint256)
         );
 
-        bytes memory challenge =
-            isSimulation ? bytes("") : abi.encodePacked(userOpHash);
+        bytes memory challenge = isSimulation
+            ? bytes("")
+            : abi.encodePacked(MessageHashUtils.toEthSignedMessageHash(userOpHash));
 
         bool isSigValid = verifySignatureWebauthn({
             challenge: challenge,

@@ -8,6 +8,9 @@ import {
 import { SimpleAccount } from
     "@account-abstraction/0.6/contracts/samples/SimpleAccount.sol";
 
+import { ECDSA } from
+    "@openzeppelin-contracts/4.9/contracts/utils/cryptography/ECDSA.sol";
+
 import { IPasskeyAccount, Passkey } from "src/interface/IPasskeyAccount.sol";
 import { Base64Url } from "src/util/Base64Url.sol";
 import { WebAuthnSignatureVerifier } from
@@ -109,8 +112,9 @@ contract PasskeyAccount is
             (bool, bytes, bool, string, uint256, uint256, uint256, uint256)
         );
 
-        bytes memory challenge =
-            isSimulation ? bytes("") : abi.encodePacked(userOpHash);
+        bytes memory challenge = isSimulation
+            ? bytes("")
+            : abi.encodePacked(ECDSA.toEthSignedMessageHash(userOpHash));
 
         bool isSigValid = verifySignatureWebauthn({
             challenge: challenge,
