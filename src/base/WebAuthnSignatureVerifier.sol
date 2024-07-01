@@ -27,11 +27,20 @@ abstract contract WebAuthnSignatureVerifier {
         uint256 y
     ) public view returns (bool) {
         bytes memory args = abi.encode(messageHash, r, s, x, y);
-        (bool success, bytes memory ret) =
-            address(p256Verifier).staticcall(args);
-        assert(success); // never reverts, always returns 0 or 1
 
-        return abi.decode(ret, (uint256)) == 1;
+        (bool success, bytes memory data) = p256Verifier.staticcall(args);
+
+        uint256 returnValue;
+        // Return true if the call was successful and the return value is 1
+        if (success && data.length > 0) {
+            assembly {
+                returnValue := mload(add(data, 0x20))
+            }
+            return returnValue == 1;
+        }
+
+        // Otherwise return false for the unsucessful calls and invalid signatures
+        return false;
     }
 
     function verifySignature(
