@@ -16,7 +16,7 @@ import { MessageHashUtils } from
 import { IPasskeyAccount, Passkey } from "src/interface/IPasskeyAccount.sol";
 import { Base64Url } from "src/util/Base64Url.sol";
 import { WebAuthnSignatureVerifier } from
-    "src/core/WebAuthnSignatureVerifier.sol";
+    "src/base/WebAuthnSignatureVerifier.sol";
 
 contract PasskeyAccount is
     SimpleAccount,
