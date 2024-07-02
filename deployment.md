@@ -7,13 +7,13 @@
 ```shell
 source .env.deployment
 
-PASSKEY_ACCOUNT_FACTORY_ADDRESS=$(forge create --rpc-url ${NODE_RPC_URL} --private-key ${DEPLOYER_PRIVATE_KEY} --use ${COMPILER_VERSION} "src/account/${ACCOUNT_ABSTRACTION_VERSION}/PasskeyAccountFactory.sol:PasskeyAccountFactory" --constructor-args ${ENTRYPOINT_ADDRESS} | sed -nr 's/^Deployed to: (0x[0-9a-zA-Z]{40})[.]*$/\1/p')
+PASSKEY_ACCOUNT_FACTORY_ADDRESS=$(forge create --rpc-url ${NODE_RPC_URL} --private-key ${DEPLOYER_PRIVATE_KEY} --use ${COMPILER_VERSION} "src/account/${ACCOUNT_ABSTRACTION_VERSION}/PasskeyAccountFactory.sol:PasskeyAccountFactory" --constructor-args ${ENTRYPOINT_ADDRESS} ${P256_VERIFIER_ADDRESS} | sed -nr 's/^Deployed to: (0x[0-9a-zA-Z]{40})[.]*$/\1/p')
 ```
 
 ### Verify PasskeyAccountFactory contract
 
 ```shell
-forge verify-contract --watch --chain ${CHAIN_ID} --verifier "etherscan" --etherscan-api-key ${ETHERSCAN_API_KEY} --compiler-version ${COMPILER_VERSION} --constructor-args $(cast abi-encode "constructor(address)" ${ENTRYPOINT_ADDRESS}) ${PASSKEY_ACCOUNT_FACTORY_ADDRESS} "src/account/${ACCOUNT_ABSTRACTION_VERSION}/PasskeyAccountFactory.sol:PasskeyAccountFactory"
+forge verify-contract --watch --chain ${CHAIN_ID} --verifier "etherscan" --etherscan-api-key ${ETHERSCAN_API_KEY} --compiler-version ${COMPILER_VERSION} --constructor-args $(cast abi-encode "constructor(address,address)" ${ENTRYPOINT_ADDRESS} ${P256_VERIFIER_ADDRESS}) ${PASSKEY_ACCOUNT_FACTORY_ADDRESS} "src/account/${ACCOUNT_ABSTRACTION_VERSION}/PasskeyAccountFactory.sol:PasskeyAccountFactory"
 ```
 
 - Output sample

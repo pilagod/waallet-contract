@@ -35,6 +35,9 @@ passkey_credential_id=${PASSKEY_CREDENTIAL_ID:-"9h5F3DgLSjSMdnVOadmhCw"}
 passkey_x=${PASSKEY_X:-67299174900712686363169673082376821529726602378544032702281553676098545184711}
 passkey_y=${PASSKEY_Y:-104273800132786176334597151467609377740095818152192999025225464410568038480397}
 
+# Constants
+zero_address=0x0000000000000000000000000000000000000000
+
 ##############################
 # Deploy periphery contracts #
 ##############################
@@ -90,7 +93,7 @@ cast send --rpc-url ${rpc_url} --private-key ${operator_private_key} ${test_toke
 
 # Deploy PasskeyAccountFactory v0.6
 echo -e "\033[0;33m[Deploy PasskeyAccountFactory v0.6]\033[0m"
-forge create --rpc-url ${rpc_url} --private-key ${deployer_2_private_key} src/account/0.6/PasskeyAccountFactory.sol:PasskeyAccountFactory --constructor-args ${entry_point_address_v0_6}
+forge create --rpc-url ${rpc_url} --private-key ${deployer_2_private_key} src/account/0.6/PasskeyAccountFactory.sol:PasskeyAccountFactory --constructor-args ${entry_point_address_v0_6} ${zero_address}
 
 # Deploy PasskeyAccount v0.6
 echo -e "\033[0;33m[Create PasskeyAccount v0.6]\033[0m"
@@ -155,7 +158,7 @@ cast send --rpc-url ${rpc_url} --private-key ${operator_private_key} ${test_toke
 
 # Deploy PasskeyAccountFactory v0.7
 echo -e "\033[0;33m[Deploy PasskeyAccountFactory v0.7]\033[0m"
-forge create --rpc-url ${rpc_url} --private-key ${deployer_3_private_key} src/account/0.7/PasskeyAccountFactory.sol:PasskeyAccountFactory --constructor-args ${entry_point_address_v0_7}
+forge create --rpc-url ${rpc_url} --private-key ${deployer_3_private_key} src/account/0.7/PasskeyAccountFactory.sol:PasskeyAccountFactory --constructor-args ${entry_point_address_v0_7} ${zero_address}
 
 # Deploy PasskeyAccount v0.7
 echo -e "\033[0;33m[Create PasskeyAccount v0.7]\033[0m"
