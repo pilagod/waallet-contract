@@ -24,11 +24,15 @@ contract PasskeyAccountFactory {
     PasskeyAccount public immutable accountImplementation;
     IEntryPoint public entryPoint;
 
-    constructor(IEntryPoint _entryPoint) {
+    constructor(IEntryPoint _entryPoint, address _p256Verifier) {
         entryPoint = _entryPoint;
-        p256Verifier =
-            Create2.deploy(0, bytes32(0), P256_VERIFIER_CREATION_CODE);
-        accountImplementation = new PasskeyAccount(_entryPoint, p256Verifier);
+        if (_p256Verifier == address(0)) {
+            p256Verifier =
+                Create2.deploy(0, bytes32(0), P256_VERIFIER_CREATION_CODE);
+        } else {
+            p256Verifier = _p256Verifier;
+        }
+        accountImplementation = new PasskeyAccount(entryPoint, p256Verifier);
     }
 
     /**
