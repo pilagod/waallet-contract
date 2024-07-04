@@ -1,0 +1,162 @@
+## 1. Deploy and verify PasskeyAccount
+
+### Deploy PasskeyAccountFactory contract
+
+- Edit the `.env.deployment.amoy` file by copying from `.env.deployment.amoy.example` and then run the following command.
+
+```shell
+source .env.deployment.amoy
+
+PASSKEY_ACCOUNT_FACTORY_ADDRESS=$(forge create --rpc-url ${NODE_RPC_URL} --private-key ${DEPLOYER_PRIVATE_KEY} --use ${COMPILER_VERSION} "src/account/${ACCOUNT_ABSTRACTION_VERSION}/PasskeyAccountFactory.sol:PasskeyAccountFactory" --constructor-args ${ENTRYPOINT_ADDRESS} ${P256_VERIFIER_ADDRESS} | sed -nr 's/^Deployed to: (0x[0-9a-zA-Z]{40})[.]*$/\1/p')
+```
+
+### Verify PasskeyAccountFactory contract
+
+```shell
+forge verify-contract --watch --verifier-url ${VERIFIER_URL} --verifier "oklink" --api-key ${OKLINK_API_KEY} --compiler-version ${COMPILER_VERSION} --constructor-args $(cast abi-encode "constructor(address,address)" ${ENTRYPOINT_ADDRESS} ${P256_VERIFIER_ADDRESS}) ${PASSKEY_ACCOUNT_FACTORY_ADDRESS} "src/account/${ACCOUNT_ABSTRACTION_VERSION}/PasskeyAccountFactory.sol:PasskeyAccountFactory"
+```
+
+- Output sample
+
+```shell
+Start verifying contract `0x0a1De47125A52123a8e4a296fCeC478440e42cd8` deployed on mainnet
+
+Submitting verification for [src/account/0.7/PasskeyAccountFactory.sol:PasskeyAccountFactory] 0x0a1De47125A52123a8e4a296fCeC478440e42cd8.
+Submitted contract for verification:
+        Response: `ok`
+        GUID: `0x0a1de47125a52123a8e4a296fcec478440e42cd8`
+        URL: https://etherscan.io/address/0x0a1de47125a52123a8e4a296fcec478440e42cd8
+Contract verification status:
+Response: `NOTOK`
+Details: `Pending in queue`
+Contract verification status:
+Response: `OK`
+Details: `Pass - Verified`
+Contract successfully verified
+```
+
+### Verify PasskeyAccount implementation contract
+
+```shell
+PASSKEY_ACCOUNT_IMPLEMENTATION_ADDRESS=$(cast call --rpc-url ${NODE_RPC_URL} ${PASSKEY_ACCOUNT_FACTORY_ADDRESS} "accountImplementation()" | sed -r 's/^[.]*(0x)([0]{24})?([0-9a-zA-Z]{40})[.]*$/\1\3/g')
+
+P256_VERIFIER_ADDRESS=$(cast call --rpc-url ${NODE_RPC_URL} ${PASSKEY_ACCOUNT_FACTORY_ADDRESS} "p256Verifier()" | sed -r 's/^[.]*(0x)([0]{24})?([0-9a-zA-Z]{40})[.]*$/\1\3/g')
+
+forge verify-contract --watch --verifier-url ${VERIFIER_URL} --verifier "oklink" --api-key ${OKLINK_API_KEY} --compiler-version ${COMPILER_VERSION} --constructor-args $(cast abi-encode "constructor(address,address)" ${ENTRYPOINT_ADDRESS} ${P256_VERIFIER_ADDRESS}) ${PASSKEY_ACCOUNT_IMPLEMENTATION_ADDRESS} "src/account/${ACCOUNT_ABSTRACTION_VERSION}/PasskeyAccount.sol:PasskeyAccount"
+```
+
+### Deploy PasskeyAccount contract via PasskeyAccountFactory
+
+```shell
+cast send --rpc-url ${NODE_RPC_URL} --private-key ${DEPLOYER_PRIVATE_KEY} ${PASSKEY_ACCOUNT_FACTORY_ADDRESS} "createAccount(string calldata credId,uint256 pubKeyX,uint256 pubKeyY,uint256 salt)" ${PASSKEY_CREDENTIAL_ID} ${PASSKEY_X} ${PASSKEY_Y} ${SALT}
+```
+
+### Verify PasskeyAccount contract
+
+- 1. Run the command below.
+
+```shell
+PASSKEY_ACCOUNT_ADDRESS=$(cast call --rpc-url ${NODE_RPC_URL} ${PASSKEY_ACCOUNT_FACTORY_ADDRESS} "getAddress(string calldata credId,uint256 pubKeyX,uint256 pubKeyY,uint256 salt)" ${PASSKEY_CREDENTIAL_ID} ${PASSKEY_X} ${PASSKEY_Y} ${SALT} | sed -r 's/^[.]*(0x)([0]{24})?([0-9a-zA-Z]{40})[.]*$/\1\3/g')
+
+echo "Verification contract: ${PASSKEY_ACCOUNT_ADDRESS}" && echo "Implementation contract: ${PASSKEY_ACCOUNT_IMPLEMENTATION_ADDRESS}"
+```
+
+- 2. Copy the displayed verification contract address and visit the contract page on Etherscan; Here is a sample link:: [https://www.oklink.com/zh-hant/amoy/address/0xc80cedc2274905f32483d71d59b951988d7c8d7d/contract](https://www.oklink.com/zh-hant/amoy/address/0xc80cedc2274905f32483d71d59b951988d7c8d7d/contract).
+
+```shell
+Verification contract: 0xc80cedc2274905f32483d71d59b951988d7c8d7d
+Implementation contract: 0xb8b5f747d85fc02dee4be66b4b498a1e092dcb2c
+```
+
+- 3. Click `Is this a proxy?` and `Verify`. Ensure the displayed implementation contract matches the sample output. Click `Save` to complete PasskeyAccount verification.
+
+- 4. If necessary, you can also verify PasskeyAccount (ERC1967Proxy) contract.
+
+```shell
+forge verify-contract --watch --verifier-url ${VERIFIER_URL} --verifier "oklink" --api-key ${OKLINK_API_KEY} --compiler-version ${COMPILER_VERSION} --constructor-args $(cast abi-encode "constructor(address,bytes)" ${PASSKEY_ACCOUNT_IMPLEMENTATION_ADDRESS} $(cast calldata "initialize(string,uint256,uint256)" ${PASSKEY_CREDENTIAL_ID} ${PASSKEY_X} ${PASSKEY_Y})) ${PASSKEY_ACCOUNT_ADDRESS} "lib/openzeppelin-contracts/${OPENZEPPELIN_CONTRACTS_VERSION}/contracts/proxy/ERC1967/ERC1967Proxy.sol:ERC1967Proxy"
+```
+
+## 2. Deploy and verify SimpleAccount
+
+### Deploy SimpleAccountFactory contract
+
+- Edit the `.env.deployment.amoy` file by copying from `.env.deployment.amoy.example` and then run the following command.
+
+```shell
+source .env.deployment.amoy
+
+SIMPLE_ACCOUNT_FACTORY_ADDRESS=$(forge create --rpc-url ${NODE_RPC_URL} --private-key ${DEPLOYER_PRIVATE_KEY} --use ${COMPILER_VERSION} "lib/account-abstraction/${ACCOUNT_ABSTRACTION_VERSION}/contracts/samples/SimpleAccountFactory.sol:SimpleAccountFactory" --constructor-args ${ENTRYPOINT_ADDRESS} | sed -nr 's/^Deployed to: (0x[0-9a-zA-Z]{40})[.]*$/\1/p')
+```
+
+### Verify SimpleAccountFactory contract
+
+```shell
+forge verify-contract --watch --verifier-url ${VERIFIER_URL} --verifier "oklink" --api-key ${OKLINK_API_KEY} --compiler-version ${COMPILER_VERSION} --constructor-args $(cast abi-encode "constructor(address)" ${ENTRYPOINT_ADDRESS}) ${SIMPLE_ACCOUNT_FACTORY_ADDRESS} "lib/account-abstraction/${ACCOUNT_ABSTRACTION_VERSION}/contracts/samples/SimpleAccountFactory.sol:SimpleAccountFactory"
+```
+
+### Verify SimpleAccount implementation contract
+
+```shell
+SIMPLE_ACCOUNT_IMPLEMENTATION_ADDRESS=$(cast call --rpc-url ${NODE_RPC_URL} ${SIMPLE_ACCOUNT_FACTORY_ADDRESS} "accountImplementation()" | sed -r 's/^[.]*(0x)([0]{24})?([0-9a-zA-Z]{40})[.]*$/\1\3/g')
+
+forge verify-contract --watch --verifier-url ${VERIFIER_URL} --verifier "oklink" --api-key ${OKLINK_API_KEY} --compiler-version ${COMPILER_VERSION} --constructor-args $(cast abi-encode "constructor(address)" ${ENTRYPOINT_ADDRESS}) ${SIMPLE_ACCOUNT_IMPLEMENTATION_ADDRESS} "lib/account-abstraction/${ACCOUNT_ABSTRACTION_VERSION}/contracts/samples/SimpleAccount.sol:SimpleAccount"
+```
+
+### Deploy SimpleAccount contract via SimpleAccountFactory
+
+```shell
+cast send --rpc-url ${NODE_RPC_URL} --private-key ${DEPLOYER_PRIVATE_KEY} ${SIMPLE_ACCOUNT_FACTORY_ADDRESS} "createAccount(address owner,uint256 salt)" ${SIMPLE_ACCOUNT_OWNER_ADDRESS} ${SALT}
+```
+
+### Verify SimpleAccount contract
+
+- 1. Run the command below.
+
+```shell
+SIMPLE_ACCOUNT_ADDRESS=$(cast call --rpc-url ${NODE_RPC_URL} ${SIMPLE_ACCOUNT_FACTORY_ADDRESS} "getAddress(address owner,uint256 salt)" ${SIMPLE_ACCOUNT_OWNER_ADDRESS} ${SALT} | sed -r 's/^[.]*(0x)([0]{24})?([0-9a-zA-Z]{40})[.]*$/\1\3/g')
+
+echo "Verification contract: ${SIMPLE_ACCOUNT_ADDRESS}" && echo "Implementation contract: ${SIMPLE_ACCOUNT_IMPLEMENTATION_ADDRESS}"
+```
+
+- 2. Copy the displayed verification contract address and visit the contract page on Etherscan.
+
+- 3. Click `Is this a proxy?` and `Verify`. Ensure the displayed implementation contract matches the sample output. Click `Save` to complete SimpleAccount verification.
+
+- 4. If necessary, you can also verify SimpleAccount (ERC1967Proxy) contract.
+
+```shell
+forge verify-contract --watch --verifier-url ${VERIFIER_URL} --verifier "oklink" --api-key ${OKLINK_API_KEY} --compiler-version ${COMPILER_VERSION} --constructor-args $(cast abi-encode "constructor(address,bytes)" ${SIMPLE_ACCOUNT_IMPLEMENTATION_ADDRESS} $(cast calldata "initialize(address)" ${SIMPLE_ACCOUNT_OWNER_ADDRESS})) ${SIMPLE_ACCOUNT_ADDRESS} "lib/openzeppelin-contracts/${OPENZEPPELIN_CONTRACTS_VERSION}/contracts/proxy/ERC1967/ERC1967Proxy.sol:ERC1967Proxy"
+```
+
+## 3. Deploy and verify VerifyingPaymaster
+
+### Deploy VerifyingPaymaster contract
+
+- Edit the `.env.deployment` file by copying from `.env.deployment.example` and then run the following command.
+
+```shell
+source .env.deployment.amoy
+
+VERIFYING_PAYMASTER_ADDRESS=$(forge create --rpc-url ${NODE_RPC_URL} --private-key ${DEPLOYER_PRIVATE_KEY} --use ${COMPILER_VERSION} "lib/account-abstraction/${ACCOUNT_ABSTRACTION_VERSION}/contracts/samples/VerifyingPaymaster.sol:VerifyingPaymaster" --constructor-args ${ENTRYPOINT_ADDRESS} ${VERIFYING_PAYMASTER_OWNER_ADDRESS} | sed -nr 's/^Deployed to: (0x[0-9a-zA-Z]{40})[.]*$/\1/p')
+```
+
+### Verify VerifyingPaymaster contract
+
+```shell
+forge verify-contract --watch --verifier-url ${VERIFIER_URL} --verifier "oklink" --api-key ${OKLINK_API_KEY} --compiler-version ${COMPILER_VERSION} --constructor-args $(cast abi-encode "constructor(address,address)" ${ENTRYPOINT_ADDRESS} ${VERIFYING_PAYMASTER_OWNER_ADDRESS}) ${VERIFYING_PAYMASTER_ADDRESS} "lib/account-abstraction/${ACCOUNT_ABSTRACTION_VERSION}/contracts/samples/VerifyingPaymaster.sol:VerifyingPaymaster"
+```
+
+### Deposit to EntryPoint and stake to Bundler for VerifyingPaymaster
+
+```shell
+VALUE=0.3ether
+
+# Deposit for VerifyingPaymaster
+cast send --rpc-url ${NODE_RPC_URL} --private-key ${DEPLOYER_PRIVATE_KEY} ${ENTRYPOINT_ADDRESS} --value ${VALUE} "depositTo(address account)" ${VERIFYING_PAYMASTER_ADDRESS}
+
+# Check VerifyingPaymaster deposit amount.
+cast from-wei $(cast to-dec $(cast call --rpc-url ${NODE_RPC_URL} ${ENTRYPOINT_ADDRESS} "balanceOf(address account)" ${VERIFYING_PAYMASTER_ADDRESS}))
+
+# Stake for VerifyingPaymaster
+cast send --rpc-url ${NODE_RPC_URL} --private-key ${DEPLOYER_PRIVATE_KEY} ${VERIFYING_PAYMASTER_ADDRESS} --value ${VALUE} "addStake(uint32 unstakeDelaySec)" 86401
+```
