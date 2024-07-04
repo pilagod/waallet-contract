@@ -49,7 +49,7 @@ contract PasskeyAccountTest is Test {
         entryPoint = IEntryPoint(entryPointAddr);
 
         // Deploy the PasskeyAccountFactory and PasskeyAccount
-        passkeyAccountFactory = new PasskeyAccountFactory(entryPoint);
+        passkeyAccountFactory = new PasskeyAccountFactory(entryPoint, address(0));
         passkeyAccount =
             passkeyAccountFactory.createAccount(credId, pubKeyX, pubKeyY, salt);
     }
