@@ -31,7 +31,7 @@ services:
       - ./keystore:/root/.ethereum/keystore
 
   geth_setup:
-    image: ghcr.io/foundry-rs/foundry:nightly-82ff8ee338818e6a6dc356e4c72ab72d31965375
+    image: ghcr.io/foundry-rs/foundry:latest
     platform: linux/amd64
     working_dir: /waallet-contract
     depends_on:
