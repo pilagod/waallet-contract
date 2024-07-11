@@ -10,6 +10,7 @@ remappings = [
     "@openzeppelin-contracts=lib/openzeppelin-contracts"
 ]
 bytecode_hash = "none"
+evm_version = "shanghai"
 
 [fmt]
 line_length = 80
