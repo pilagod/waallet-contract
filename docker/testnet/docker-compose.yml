@@ -32,7 +32,6 @@ services:
 
   geth_setup:
     image: ghcr.io/foundry-rs/foundry:latest
-    platform: linux/amd64
     working_dir: /waallet-contract
     depends_on:
       - geth
