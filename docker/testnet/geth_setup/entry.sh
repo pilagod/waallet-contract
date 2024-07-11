@@ -87,6 +87,10 @@ forge create --rpc-url ${rpc_url} --private-key ${deployer_2_private_key} lib/ac
 echo -e "\033[0;33m[Create SimpleAccount v0.6]\033[0m"
 cast send --rpc-url ${rpc_url} --private-key ${deployer_2_private_key} ${simple_account_factory_address_v0_6} "createAccount(address owner,uint256 salt)" ${operator_address} 0
 
+# Get SimpleAccount v0.6 implementation address
+echo -e "\033[0;33m[Get SimpleAccount v0.6 implementation address]\033[0m"
+echo $(cast call --rpc-url ${rpc_url} ${simple_account_factory_address_v0_6} "accountImplementation()" | sed -r 's/^[.]*(0x)([0]{24}|)([0-9a-zA-Z]{40})[.]*$/\1\3/g')
+
 # Get SimpleAccount v0.6 address
 echo -e "\033[0;33m[Get SimpleAccount v0.6 address]\033[0m"
 echo $(cast call --rpc-url ${rpc_url} ${simple_account_factory_address_v0_6} "getAddress(address owner,uint256 salt)" ${operator_address} 0 | sed -r 's/^[.]*(0x)([0]{24}|)([0-9a-zA-Z]{40})[.]*$/\1\3/g')
