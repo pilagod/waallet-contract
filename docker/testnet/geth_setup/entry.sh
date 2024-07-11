@@ -54,6 +54,7 @@ echo -e "\033[0;33m[Deploy periphery contracts]\033[0m"
 
 counter_address="0x8464135c8F25Da09e49BC8782676a84730C318bC"
 test_token_address="0x71C95911E9a5D330f4D621842EC243EE1343292e"
+code_reader_address="0x948B3c65b89DF0B4894ABE91E6D02FE579834F8F"
 
 # Deploy Counter
 echo -e "\033[0;33m[Deploy Counter]\033[0m"
@@ -62,6 +63,13 @@ forge create --rpc-url ${rpc_url} --private-key ${deployer_1_private_key} src/Co
 # Deploy Test Token
 echo -e "\033[0;33m[Deploy Test Token]\033[0m"
 forge create --rpc-url ${rpc_url} --private-key ${deployer_1_private_key} src/token/ERC20Mintable.sol:ERC20Mintable --constructor-args "Test Token" "TEST"
+
+# Deploy CodeReader
+echo -e "\033[0;33m[Deploy CodeReader]\033[0m"
+forge create --rpc-url ${rpc_url} --private-key ${deployer_1_private_key} src/CodeReader.sol:CodeReader
+
+echo -e "\033[0;33m[Read creation code of proxy]\033[0m"
+echo $(cast call --rpc-url ${rpc_url} ${code_reader_address} "code()" | sed -r 's/^[.]*(0x)([0]{24}|)([0-9a-zA-Z]{40})[.]*$/\1\3/g')
 
 ###############################################
 # Deploy account abstraction v0.6.0 contracts #
