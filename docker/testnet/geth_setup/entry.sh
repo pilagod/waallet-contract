@@ -16,6 +16,14 @@ curl -d '{"id":1,"jsonrpc":"2.0","method":"clique_propose","params":["0xf39Fd6e5
 operator_address="0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266"
 operator_private_key="0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80"
 
+# Bundler
+bundler_v0_6_address="0x4b39F7b0624b9dB86AD293686bc38B903142dbBc"
+bundler_v0_7_address="0x71b4a2d9B91726bdb5849D928967A1654D7F3de7"
+
+# Topup bundlers
+cast send --rpc-url ${rpc_url} --private-key ${operator_private_key} ${bundler_v0_6_address} --value 100ether
+cast send --rpc-url ${rpc_url} --private-key ${operator_private_key} ${bundler_v0_7_address} --value 100ether
+
 # For deploying periphery contracts
 deployer_1_address="0x70997970C51812dc3A010C7d01b50e0d17dc79C8"
 deployer_1_private_key="0x59c6995e998f97a5a0044966f0945389dc9e86dae88c7a8412f4603b6b78690d"
@@ -26,7 +34,7 @@ deployer_2_private_key="0x5de4111afa1a4b94908f83103eb1f1706367c2e68ca870fc3fb9a8
 deployer_3_address="0x90F79bf6EB2c4f870365E785982E1f101E93b906"
 deployer_3_private_key="0x7c852118294e51e653712a81e05800f419141751be58f605c371e15141b007a6"
 
-# Topup deployer
+# Topup deployers
 cast send --rpc-url ${rpc_url} --private-key ${operator_private_key} ${deployer_1_address} --value 100ether
 cast send --rpc-url ${rpc_url} --private-key ${operator_private_key} ${deployer_2_address} --value 100ether
 cast send --rpc-url ${rpc_url} --private-key ${operator_private_key} ${deployer_3_address} --value 100ether
