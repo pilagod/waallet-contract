@@ -45,12 +45,12 @@ This testnet has following pre-deployed contracts:
 | --------------------- | ------------------------------------------ | --------------------------- |
 | EntryPoint            | 0x663F3ad617193148711d28f5334eE4Ed07016602 |                             |
 | SimpleAccountFactory  | 0x2E983A1Ba5e8b38AAAeC4B440B9dDcFBf72E15d1 |                             |
-| SimpleAccount         | 0x1E684E8937774B00Ee2Ea562256f27a5c9D20d7c | Balance: 100 ETH, 100 TEST  |
+| SimpleAccount         | 0x7Fa35750bF7e98891019460b0B3194bE27E86859 | Balance: 100 ETH, 100 TEST  |
 | PasskeyAccountFactory | 0xBC9129Dc0487fc2E169941C75aABC539f208fb01 |                             |
 | PasskeyAccount        | **_Depends on PASSKEY env variables_**     | Balance: 100 ETH, 100 TEST  |
 | VerifyingPaymaster    | 0xF6168876932289D073567f347121A267095f3DD6 | EntryPoint deposit: 100 ETH |
 
-> If you use default passkey, the PasskeyAccount address would be `0xF4bb6e38fC8A5ec977D4Fdc74B4E0fa84c8dc704`.
+> If you use default passkey, the PasskeyAccount address would be `0x62c45C04e3Be191E88836852dAFF7B6CE8e6aCF9`.
 
 #### Account abstraction v0.7.0 contracts
 
@@ -58,12 +58,12 @@ This testnet has following pre-deployed contracts:
 | --------------------- | ------------------------------------------ | --------------------------- |
 | EntryPoint            | 0x057ef64E23666F000b34aE31332854aCBd1c8544 |                             |
 | SimpleAccountFactory  | 0x261D8c5e9742e6f7f1076Fa1F560894524e19cad |                             |
-| SimpleAccount         | 0xe569f1d8487239659C09b5cA1881320B5EbB0ab2 | Balance: 100 ETH, 100 TEST  |
+| SimpleAccount         | 0xD0dA07666BA2139aa6fF7A450A8596291a6cE471 | Balance: 100 ETH, 100 TEST  |
 | PasskeyAccountFactory | 0xCba6b9A951749B8735C603e7fFC5151849248772 |                             |
 | PasskeyAccount        | **_Depends on PASSKEY env variables_**     | Balance: 100 ETH, 100 TEST  |
 | VerifyingPaymaster    | 0xcf27F781841484d5CF7e155b44954D7224caF1dD | EntryPoint deposit: 100 ETH |
 
-> If you use default passkey, the PasskeyAccount address would be `0x31d8371747ab42a88c7a4983378203c27c7361b9`.
+> If you use default passkey, the PasskeyAccount address would be `0xa83e7ae8d81F8F5EBa94dfB45b836bdb4785bfC2`.
 
 > [!NOTE]
 > These contracts are mainly owned by `0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266`.

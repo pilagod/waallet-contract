@@ -2,6 +2,7 @@ version: "3.8"
 services:
   geth_setup:
     image: ghcr.io/foundry-rs/foundry
+    platform: linux/amd64
     working_dir: /waallet-contract
     command: ./docker/testnet/geth_setup/entry.sh
     environment:

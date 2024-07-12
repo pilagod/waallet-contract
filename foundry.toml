@@ -9,6 +9,8 @@ remappings = [
     "@account-abstraction=lib/account-abstraction",
     "@openzeppelin-contracts=lib/openzeppelin-contracts"
 ]
+bytecode_hash = "none"
+evm_version = "paris"
 
 [fmt]
 line_length = 80
