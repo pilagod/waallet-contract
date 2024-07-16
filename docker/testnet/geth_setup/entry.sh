@@ -71,7 +71,7 @@ echo -e "\033[0;33m[Deploy account abstraction v0.6.0 contracts]\033[0m"
 
 entry_point_address_v0_6="0x663F3ad617193148711d28f5334eE4Ed07016602"
 simple_account_factory_address_v0_6="0x2E983A1Ba5e8b38AAAeC4B440B9dDcFBf72E15d1"
-simple_account_address_v0_6="0x1E684E8937774B00Ee2Ea562256f27a5c9D20d7c"
+simple_account_address_v0_6="0x7Fa35750bF7e98891019460b0B3194bE27E86859"
 passkey_account_factory_address_v0_6="0xBC9129Dc0487fc2E169941C75aABC539f208fb01"
 verifying_paymaster_address_v0_6="0xF6168876932289D073567f347121A267095f3DD6"
 
@@ -136,7 +136,7 @@ echo -e "\033[0;33m[Deploy account abstraction v0.7.0 contracts]\033[0m"
 
 entry_point_address_v0_7="0x057ef64E23666F000b34aE31332854aCBd1c8544"
 simple_account_factory_address_v0_7="0x261D8c5e9742e6f7f1076Fa1F560894524e19cad"
-simple_account_address_v0_7="0xe569f1d8487239659C09b5cA1881320B5EbB0ab2"
+simple_account_address_v0_7="0xD0dA07666BA2139aa6fF7A450A8596291a6cE471"
 passkey_account_factory_address_v0_7="0xCba6b9A951749B8735C603e7fFC5151849248772"
 verifying_paymaster_address_v0_7="0xcf27F781841484d5CF7e155b44954D7224caF1dD"
 
