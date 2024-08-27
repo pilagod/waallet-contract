@@ -7,7 +7,8 @@ remappings = [
     "lib/account-abstraction/0.6:@openzeppelin=lib/openzeppelin-contracts/4.9",
     "lib/account-abstraction/0.7:@openzeppelin=lib/openzeppelin-contracts/5.0",
     "@account-abstraction=lib/account-abstraction",
-    "@openzeppelin-contracts=lib/openzeppelin-contracts"
+    "@openzeppelin-contracts=lib/openzeppelin-contracts",
+    "@uniswap=lib/uniswap"
 ]
 bytecode_hash = "none"
 evm_version = "paris"
