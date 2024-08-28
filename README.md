@@ -38,6 +38,7 @@ This testnet has following pre-deployed contracts:
 | ---------- | ------------------------------------------ |
 | Counter    | 0x8464135c8F25Da09e49BC8782676a84730C318bC |
 | Test Token | 0x71C95911E9a5D330f4D621842EC243EE1343292e |
+| Multicall3 | 0xcA11bde05977b3631167028862bE2a173976CA11 |
 
 #### Account abstraction v0.6.0 contracts
 

@@ -34,10 +34,16 @@ deployer_2_private_key="0x5de4111afa1a4b94908f83103eb1f1706367c2e68ca870fc3fb9a8
 deployer_3_address="0x90F79bf6EB2c4f870365E785982E1f101E93b906"
 deployer_3_private_key="0x7c852118294e51e653712a81e05800f419141751be58f605c371e15141b007a6"
 
+# Multicall3 contract: https://github.com/mds1/multicall
+multicall3_deployer_address="0x05f32b3cc3888453ff71b01135b34ff8e41263f2"
+# Load the multicall3_signed_transaction variable
+source /script/multicall3-signed-transaction.sh
+
 # Topup deployers
 cast send --rpc-url ${rpc_url} --private-key ${operator_private_key} ${deployer_1_address} --value 100ether
 cast send --rpc-url ${rpc_url} --private-key ${operator_private_key} ${deployer_2_address} --value 100ether
 cast send --rpc-url ${rpc_url} --private-key ${operator_private_key} ${deployer_3_address} --value 100ether
+cast send --rpc-url ${rpc_url} --private-key ${operator_private_key} ${multicall3_deployer_address} --value 100ether
 
 passkey_credential_id=${PASSKEY_CREDENTIAL_ID:-"9h5F3DgLSjSMdnVOadmhCw"}
 passkey_x=${PASSKEY_X:-67299174900712686363169673082376821529726602378544032702281553676098545184711}
@@ -62,6 +68,10 @@ forge create --rpc-url ${rpc_url} --private-key ${deployer_1_private_key} src/Co
 # Deploy Test Token
 echo -e "\033[0;33m[Deploy Test Token]\033[0m"
 forge create --rpc-url ${rpc_url} --private-key ${deployer_1_private_key} src/token/ERC20Mintable.sol:ERC20Mintable --constructor-args "Test Token" "TEST"
+
+# Deploy Multicall3
+echo -e "\033[0;33m[Deploy Multicall3 to 0xcA11bde05977b3631167028862bE2a173976CA11]\033[0m"
+cast publish --rpc-url ${rpc_url} ${multicall3_signed_transaction}
 
 ###############################################
 # Deploy account abstraction v0.6.0 contracts #
